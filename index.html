@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WV Accountability Project — 2026 Session</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#111010; --paper:#f7f3ec; --paper2:#eee8d8; --paper3:#e5deca;
+  --red:#b5291c; --red2:#8c1e13; --gold:#b8962e; --green:#1e6640; --blue:#1a3f7a;
+  --muted:#6b6455; --border:#cdc6b4; --border2:#b8b0a0;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35;}
+
+/* MASTHEAD */
+.masthead{background:var(--ink);color:var(--paper);position:sticky;top:0;z-index:200;box-shadow:0 3px 12px rgba(0,0,0,0.35);}
+.mast-flag{display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid rgba(255,255,255,0.08);}
+.mf-side{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;letter-spacing:0.14em;color:rgba(255,255,255,0.38);text-transform:uppercase;padding:8px 0;min-width:160px;}
+.mf-side.right{text-align:right;}
+.mf-center{text-align:center;padding:14px 20px 10px;flex:1;}
+.mf-center h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,5vw,3.2rem);letter-spacing:0.08em;line-height:1;color:#fff;}
+.mf-center .sub{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.18em;color:rgba(255,255,255,0.35);text-transform:uppercase;margin-top:2px;}
+.mast-nav{display:flex;justify-content:center;}
+.tab-btn{font-family:'IBM Plex Mono',monospace;font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase;padding:11px 26px;background:none;border:none;border-right:1px solid rgba(255,255,255,0.07);cursor:pointer;color:rgba(255,255,255,0.42);transition:all .18s;}
+.tab-btn:first-child{border-left:1px solid rgba(255,255,255,0.07);}
+.tab-btn:hover{color:#fff;background:rgba(255,255,255,0.06);}
+.tab-btn.active{color:#fff;background:var(--red);border-color:var(--red2);}
+
+/* TICKER */
+.ticker{background:var(--red);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.05em;padding:5px 0;overflow:hidden;white-space:nowrap;}
+.ticker-inner{display:inline-block;}
+@keyframes tickScroll{from{transform:translateX(100vw);}to{transform:translateX(-100%);}}
+
+/* LOADER */
+#loader{max-width:580px;margin:80px auto;padding:52px;text-align:center;background:var(--paper);border:2px solid var(--ink);box-shadow:8px 8px 0 var(--ink);animation:fadeUp .35s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+.l-kicker{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:14px;}
+#loader h2{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:0.06em;margin-bottom:10px;}
+#loader p{color:var(--muted);font-size:0.87rem;line-height:1.65;margin-bottom:30px;}
+.dz{border:2px dashed var(--border2);padding:44px 32px;cursor:pointer;background:var(--paper2);transition:all .18s;margin-bottom:10px;}
+.dz:hover,.dz.over{border-color:var(--ink);background:var(--paper);}
+.dz .icon{font-size:2.6rem;margin-bottom:10px;}
+.dz p{font-size:0.82rem;color:var(--muted);margin:0;}
+.dz strong{font-family:'IBM Plex Mono',monospace;font-size:0.76rem;color:var(--ink);}
+#finput{display:none;}
+.hint{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--muted);letter-spacing:0.04em;}
+
+/* APP */
+#app{display:none;}
+
+/* STATS BAR */
+.sbar{display:grid;grid-template-columns:repeat(5,1fr);background:var(--paper2);border-bottom:2px solid var(--ink);}
+.scell{padding:13px 14px;border-right:1px solid var(--border);text-align:center;}
+.scell:last-child{border-right:none;}
+.snum{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:0.04em;line-height:1;}
+.snum.r{color:var(--red);} .snum.g{color:var(--green);} .snum.b{color:var(--blue);}
+.slbl{font-family:'IBM Plex Mono',monospace;font-size:0.53rem;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+
+/* LAYOUT */
+.wrap{max-width:1480px;margin:0 auto;padding:0 24px;}
+.tab-pane{display:none;padding:30px 0 64px;}
+.tab-pane.active{display:block;}
+.sec{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);padding-bottom:7px;margin-bottom:14px;}
+
+/* OVERVIEW */
+.ov-grid{display:grid;grid-template-columns:1fr 330px;gap:30px;margin-bottom:32px;}
+.p-bar{display:flex;height:36px;border:1px solid var(--border2);overflow:hidden;margin-bottom:5px;}
+.p-R{background:var(--red);display:flex;align-items:center;justify-content:center;}
+.p-D{background:var(--blue);display:flex;align-items:center;justify-content:center;}
+.p-lbl{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.04em;color:#fff;}
+.p-sub{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--muted);margin-bottom:20px;}
+
+.sp-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
+.sp-row:hover{background:var(--paper2);}
+.sp-rank{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;color:var(--border2);width:22px;flex-shrink:0;text-align:center;}
+.sp-photo{width:34px;height:34px;border-radius:50%;border:2px solid var(--border);object-fit:cover;flex-shrink:0;background:var(--paper3);}
+.sp-photo-init{width:34px;height:34px;border-radius:50%;border:2px solid var(--border);background:var(--paper3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:0.9rem;color:var(--muted);}
+.sp-name{font-family:'Libre Baskerville',serif;font-size:0.86rem;font-weight:700;flex:1;}
+.sp-party{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;}
+.sp-cnt{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;color:var(--red);flex-shrink:0;}
+
+.gc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.gc{border:1px solid var(--border);padding:13px;text-align:center;background:var(--paper);}
+.gc-n{font-family:'Bebas Neue',sans-serif;font-size:1.55rem;letter-spacing:0.04em;line-height:1;}
+.gc-l{font-family:'IBM Plex Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);}
+.stat-row-l{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;}
+.stat-row-v{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:0.04em;}
+
+.spot-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
+.spot-card{border:1px solid var(--border);padding:17px;background:var(--paper);cursor:pointer;transition:all .15s;position:relative;overflow:hidden;}
+.spot-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.spot-card.c0::before{background:var(--green);} .spot-card.c1::before{background:var(--red);}
+.spot-card.c2::before{background:var(--gold);} .spot-card.c3::before{background:var(--blue);}
+.spot-card:hover{border-color:var(--ink);box-shadow:3px 3px 0 var(--ink);transform:translate(-1px,-1px);}
+.sp-tag{font-family:'IBM Plex Mono',monospace;font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;padding:2px 6px;margin-bottom:8px;display:inline-block;color:#fff;}
+.sp-tag.t0{background:var(--green);} .sp-tag.t1{background:var(--red);}
+.sp-tag.t2{background:var(--gold);} .sp-tag.t3{background:var(--blue);}
+.sp-bnum{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--muted);margin-bottom:3px;}
+.sp-btitle{font-family:'Libre Baskerville',serif;font-size:0.86rem;font-weight:700;line-height:1.3;margin-bottom:5px;}
+.sp-bdesc{font-size:0.76rem;color:var(--muted);line-height:1.4;}
+
+.feed-row{display:flex;align-items:baseline;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:all .12s;}
+.feed-row:hover{background:var(--paper2);padding-left:6px;}
+.feed-num{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--red);flex-shrink:0;width:72px;}
+.feed-title{font-size:0.82rem;flex:1;line-height:1.3;}
+.feed-date{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--muted);flex-shrink:0;}
+
+/* BILLS */
+.toolbar{display:flex;gap:9px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
+.sbox{flex:1;min-width:200px;padding:8px 12px;border:1px solid var(--border2);background:var(--paper);font-family:'IBM Plex Sans',sans-serif;font-size:0.83rem;color:var(--ink);outline:none;transition:border-color .14s;}
+.sbox:focus{border-color:var(--ink);}
+.fsel{padding:8px 12px;border:1px solid var(--border2);background:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:0.63rem;letter-spacing:0.04em;color:var(--ink);outline:none;cursor:pointer;}
+.rcount{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);margin-bottom:9px;letter-spacing:0.04em;}
+.btable{width:100%;border-collapse:collapse;font-size:0.81rem;}
+.btable th{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--ink);padding:8px 10px;text-align:left;background:var(--paper2);white-space:nowrap;}
+.btable td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.btable tr:hover td{background:var(--paper2);cursor:pointer;}
+.bnum{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--red);white-space:nowrap;font-weight:500;}
+.btitle{max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.badge{display:inline-block;padding:2px 6px;font-family:'IBM Plex Mono',monospace;font-size:0.52rem;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;}
+.bp{background:#d1e8d8;color:#1a5c2f;} .be{background:#d0e4f5;color:#1a3f7a;}
+.bf{background:#f5d5d2;color:#7a1e16;} .bc{background:#fdefc3;color:#7a5a0a;} .bi{background:#e4e4e4;color:#444;}
+.pager{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:12px;border-top:1px solid var(--border);}
+.pager-info{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);}
+.pager-btns{display:flex;gap:4px;}
+.pbtn{padding:5px 10px;border:1px solid var(--border2);background:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:0.6rem;cursor:pointer;color:var(--ink);transition:all .12s;}
+.pbtn:hover,.pbtn.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.pbtn:disabled{opacity:0.32;cursor:not-allowed;}
+
+/* DELEGATES */
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:13px;}
+.dcard{border:1px solid var(--border);background:var(--paper);cursor:pointer;transition:all .15s;overflow:hidden;}
+.dcard:hover{border-color:var(--ink);box-shadow:4px 4px 0 var(--ink);transform:translate(-2px,-2px);}
+.dtop{display:flex;gap:12px;align-items:flex-start;padding:15px 15px 11px;}
+.dphoto{width:56px;height:56px;border-radius:4px;object-fit:cover;border:2px solid var(--border);background:var(--paper3);flex-shrink:0;}
+.dinit{width:56px;height:56px;border-radius:4px;border:2px solid var(--border);background:var(--paper3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.35rem;color:var(--muted);}
+.dinfo{flex:1;min-width:0;}
+.dname{font-family:'Libre Baskerville',serif;font-size:0.93rem;font-weight:700;line-height:1.2;margin-bottom:3px;}
+.dmeta{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.04em;color:var(--muted);line-height:1.65;}
+.pR{color:var(--red);font-weight:600;} .pD{color:var(--blue);font-weight:600;}
+.dbar-wrap{padding:0 15px;}
+.dbar{height:3px;background:var(--border);}
+.dbar-fill{height:100%;transition:width .3s;}
+.dstats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--border);}
+.ds{padding:9px 6px;text-align:center;border-right:1px solid var(--border);}
+.ds:last-child{border-right:none;}
+.dsn{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:0.04em;line-height:1;}
+.dsl{font-family:'IBM Plex Mono',monospace;font-size:0.49rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+
+/* MODAL */
+.mwrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;overflow-y:auto;padding:40px 16px;backdrop-filter:blur(2px);}
+.mwrap.open{display:flex;align-items:flex-start;justify-content:center;}
+.modal{background:var(--paper);max-width:760px;width:100%;border:2px solid var(--ink);box-shadow:10px 10px 0 var(--ink);animation:popIn .2s ease;}
+@keyframes popIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+.mhd{padding:20px 26px;border-bottom:2px solid var(--ink);display:flex;gap:14px;align-items:flex-start;}
+.mhd-photo{width:70px;height:70px;border-radius:4px;object-fit:cover;border:2px solid var(--border2);flex-shrink:0;}
+.mhd-info{flex:1;}
+.m-kicker{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.m-title{font-family:'Bebas Neue',sans-serif;font-size:1.75rem;letter-spacing:0.06em;line-height:1.1;}
+.m-sub{font-size:0.78rem;color:var(--muted);margin-top:3px;}
+.mclose{background:none;border:none;font-size:1.25rem;cursor:pointer;color:var(--muted);padding:0;line-height:1;margin-left:auto;flex-shrink:0;}
+.mclose:hover{color:var(--ink);}
+.mbd{padding:22px 26px;}
+.mbd h3{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);padding-bottom:5px;margin:18px 0 10px;}
+.mbd h3:first-child{margin-top:0;}
+.score-wrap{display:flex;gap:10px;margin-bottom:4px;}
+.sbox2{flex:1;border:1px solid var(--border);padding:13px 8px;text-align:center;}
+.sbox2 .sn{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:0.04em;line-height:1;}
+.sbox2 .sl{font-family:'IBM Plex Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+.mini-list{list-style:none;}
+.mini-item{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.81rem;align-items:baseline;}
+.mini-item:last-child{border-bottom:none;}
+.mini-num{font-family:'IBM Plex Mono',monospace;font-size:0.66rem;color:var(--red);flex-shrink:0;width:66px;}
+.chip-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:6px;}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--ink);text-decoration:none;transition:all .12s;cursor:pointer;}
+.chip:hover{background:var(--ink);color:var(--paper);}
+.soc-links{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;}
+.soc-link{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.05em;padding:4px 8px;border:1px solid var(--border);color:var(--muted);text-decoration:none;transition:all .12s;}
+.soc-link:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+.vbar-wrap{margin:5px 0;}
+.vbar-lbl{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--muted);margin-bottom:3px;display:flex;justify-content:space-between;}
+.vbar{height:5px;background:var(--border);border-radius:2px;overflow:hidden;}
+.vbar-y{height:100%;background:var(--green);border-radius:2px;}
+
+@media(max-width:900px){.sbar{grid-template-columns:repeat(3,1fr);}.ov-grid{grid-template-columns:1fr;}.spot-grid{grid-template-columns:1fr 1fr;}.dgrid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));}.tab-btn{padding:10px 13px;font-size:0.56rem;}}
+@media(max-width:600px){.sbar{grid-template-columns:repeat(2,1fr);}.spot-grid{grid-template-columns:1fr;}.score-wrap{flex-wrap:wrap;}.mf-side{display:none;}}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="mast-flag">
+    <div class="mf-side">Est. 2026 · Public Record</div>
+    <div class="mf-center">
+      <h1>WV ACCOUNTABILITY PROJECT</h1>
+      <div class="sub">2026 Regular Session · West Virginia Legislature · Jan 14 – Mar 14</div>
+    </div>
+    <div class="mf-side right" id="hdr-date"></div>
+  </div>
+  <div class="mast-nav">
+    <button class="tab-btn active" onclick="showTab('overview',this)">Overview</button>
+    <button class="tab-btn" onclick="showTab('bills',this)">Bills &amp; Votes</button>
+    <button class="tab-btn" onclick="showTab('delegates',this)">House Delegates</button>
+    <button class="tab-btn" onclick="showTab('senate',this)">Senate</button>
+  </div>
+</div>
+
+<div class="ticker"><span class="ticker-inner" id="ticker">Loading session data…</span></div>
+
+<div id="loader">
+  <div class="l-kicker">★ Load Session Data ★</div>
+  <h2>Drop Your Data File</h2>
+  <p>Load <strong>wv_data_full.json</strong> from your Desktop. Runs entirely in your browser — nothing leaves your machine.</p>
+  <div class="dz" id="dz" onclick="document.getElementById('finput').click()">
+    <div class="icon">📂</div>
+    <p><strong>Click to browse</strong> or drag &amp; drop <strong>wv_data_full.json</strong></p>
+  </div>
+  <input type="file" id="finput" accept=".json">
+  <div class="hint">100% local · no server · no tracking · no ads</div>
+</div>
+
+<div id="app">
+  <div class="sbar">
+    <div class="scell"><div class="snum" id="s1">–</div><div class="slbl">Bills Introduced</div></div>
+    <div class="scell"><div class="snum g" id="s2">–</div><div class="slbl">Passed / Enrolled</div></div>
+    <div class="scell"><div class="snum r" id="s3">–</div><div class="slbl">Passage Rate</div></div>
+    <div class="scell"><div class="snum b" id="s4">–</div><div class="slbl">House Delegates</div></div>
+    <div class="scell"><div class="snum" id="s5">–</div><div class="slbl">Senators</div></div>
+  </div>
+
+  <div class="wrap">
+    <!-- OVERVIEW -->
+    <div class="tab-pane active" id="tab-overview">
+      <div class="ov-grid">
+        <div>
+          <div class="sec">Legislative Composition — All Chambers</div>
+          <div class="p-bar" id="pbar"></div>
+          <div class="p-sub" id="psub"></div>
+          <div class="sec">Top Bill Sponsors — 2026 Session</div>
+          <div id="top-sponsors"></div>
+        </div>
+        <div>
+          <div class="sec">Session At A Glance</div>
+          <div class="gc-grid" id="gc-grid"></div>
+          <div class="sec">Bills By Status</div>
+          <div id="status-bd"></div>
+        </div>
+      </div>
+      <div class="sec">Notable Bills — Passed Into Law</div>
+      <div class="spot-grid" id="spot-grid"></div>
+      <div class="sec">Recent Activity — Last 25 Bills Acted On</div>
+      <div id="feed"></div>
+    </div>
+
+    <!-- BILLS -->
+    <div class="tab-pane" id="tab-bills">
+      <div class="toolbar">
+        <input class="sbox" id="bsearch" placeholder="Search bill number or title…" oninput="renderBills()">
+        <select class="fsel" id="fstat" onchange="renderBills()">
+          <option value="">All Statuses</option>
+          <option value="passed">Passed</option>
+          <option value="enrolled">Enrolled</option>
+          <option value="committee">In Committee</option>
+          <option value="introduced">Introduced</option>
+          <option value="failed">Failed/Vetoed</option>
+        </select>
+        <select class="fsel" id="fchamber" onchange="renderBills()">
+          <option value="">All Chambers</option>
+          <option value="HB">House Bills</option>
+          <option value="SB">Senate Bills</option>
+        </select>
+        <select class="fsel" id="fsort" onchange="renderBills()">
+          <option value="date">Most Recent</option>
+          <option value="number">Bill Number</option>
+          <option value="title">Title A–Z</option>
+        </select>
+      </div>
+      <div class="rcount" id="bcnt"></div>
+      <table class="btable">
+        <thead><tr><th>Bill #</th><th>Title</th><th>Status</th><th>Last Action</th><th>Primary Sponsor</th></tr></thead>
+        <tbody id="btbody"></tbody>
+      </table>
+      <div class="pager" id="bpager"></div>
+    </div>
+
+    <!-- DELEGATES -->
+    <div class="tab-pane" id="tab-delegates">
+      <div class="toolbar">
+        <input class="sbox" id="dsearch" placeholder="Search name or district…" oninput="renderDels()">
+        <select class="fsel" id="dparty" onchange="renderDels()">
+          <option value="">All Parties</option>
+          <option value="R">Republican</option>
+          <option value="D">Democrat</option>
+        </select>
+        <select class="fsel" id="dsort" onchange="renderDels()">
+          <option value="name">Name A–Z</option>
+          <option value="district">District</option>
+          <option value="hi">Most Bills</option>
+          <option value="lo">Fewest Bills</option>
+          <option value="rhi">Highest Pass Rate</option>
+          <option value="rlo">Lowest Pass Rate</option>
+        </select>
+      </div>
+      <div class="rcount" id="dcnt"></div>
+      <div class="dgrid" id="dgrid"></div>
+    </div>
+
+    <!-- SENATE -->
+    <div class="tab-pane" id="tab-senate">
+      <div class="toolbar">
+        <input class="sbox" id="ssearch" placeholder="Search senator…" oninput="renderSens()">
+        <select class="fsel" id="sparty" onchange="renderSens()">
+          <option value="">All Parties</option>
+          <option value="R">Republican</option>
+          <option value="D">Democrat</option>
+        </select>
+        <select class="fsel" id="ssort" onchange="renderSens()">
+          <option value="name">Name A–Z</option>
+          <option value="district">District</option>
+          <option value="hi">Most Bills</option>
+        </select>
+      </div>
+      <div class="rcount" id="scnt"></div>
+      <div class="dgrid" id="sgrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="mwrap" id="mwrap" onclick="maybeClose(event)">
+  <div class="modal">
+    <div class="mhd">
+      <img class="mhd-photo" id="mph" src="" alt="" onerror="this.style.display='none'">
+      <div class="mhd-info">
+        <div class="m-kicker" id="mkick"></div>
+        <div class="m-title" id="mtitle"></div>
+        <div class="m-sub" id="msub"></div>
+      </div>
+      <button class="mclose" onclick="closeM()">✕</button>
+    </div>
+    <div class="mbd" id="mbd"></div>
+  </div>
+</div>
+
+<script>
+let DATA,bills=[],delegates=[],senators=[],smap={},pidx={};
+let bpage=1,fbills=[];
+const PG=50;
+
+// ── BOOT ──
+document.getElementById('hdr-date').textContent=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+document.getElementById('finput').addEventListener('change',e=>load(e.target.files[0]));
+const dz=document.getElementById('dz');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');load(e.dataTransfer.files[0]);});
+
+function load(file){
+  if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{try{DATA=JSON.parse(e.target.result);init();}catch{alert('Could not parse wv_data_full.json');}};
+  r.readAsText(file);
+}
+
+// ── INIT ──
+function init(){
+  const raw=DATA.bills||[];
+  bills=Array.isArray(raw)?raw:Object.values(raw).filter(v=>v&&v.bill_id);
+
+  const rawP=DATA.delegates||[];
+  const allP=Array.isArray(rawP)?rawP:Object.values(rawP);
+  allP.forEach(p=>{pidx[p.people_id]=p;});
+
+  // build sponsor map + enrich pidx with photo/bio from sponsor records
+  smap={};
+  bills.forEach(b=>{
+    (b.sponsors||[]).forEach(s=>{
+      const pid=s.people_id;
+      if(!smap[pid])smap[pid]=[];
+      if(!smap[pid].find(x=>x.bill_id===b.bill_id))smap[pid].push(b);
+      if(s.bio&&pidx[pid]){pidx[pid]._img=s.bio?.social?.image||'';pidx[pid]._bio=s.bio;}
+    });
+  });
+
+  // split by role_id: 1=Rep/Delegate, 2=Senator
+  delegates=allP.filter(p=>{const r=parseInt(p.role_id);return r===1||(!r&&!(p.role||'').toLowerCase().includes('sen'));});
+  senators =allP.filter(p=>{const r=parseInt(p.role_id);return r===2||(p.role||'').toLowerCase().includes('sen');});
+  // fallback: split by district prefix SD-/HD-
+  if(senators.length===0){
+    senators =allP.filter(p=>(p.district||'').toUpperCase().startsWith('SD'));
+    delegates=allP.filter(p=>!(p.district||'').toUpperCase().startsWith('SD'));
+  }
+
+  document.getElementById('loader').style.display='none';
+  document.getElementById('app').style.display='block';
+  updateStats();updateTicker();renderOverview();renderBills();renderDels();renderSens();
+}
+
+// ── STATUS ──
+function statusOf(b){
+  const s=parseInt(b.status)||1;
+  const la=(b.last_action||'').toLowerCase();
+  const prog=(b.progress||[]).map(p=>p.event);
+  if(s===4||prog.includes(4))return'passed';
+  if(s===3||prog.includes(3))return'enrolled';
+  if(s===5)return'failed';
+  if(s===6||la.includes('veto')||la.includes('dead'))return'failed';
+  if(s===2||la.includes('engross'))return'committee';
+  if(la.includes('committee')||la.includes('referred'))return'committee';
+  if(la.includes('signed')||la.includes('enacted'))return'passed';
+  return'introduced';
+}
+function badge(b){
+  const s=statusOf(b);
+  const c={passed:'bp',enrolled:'be',failed:'bf',committee:'bc',introduced:'bi'};
+  const l={passed:'Passed',enrolled:'Enrolled',failed:'Failed',committee:'Committee',introduced:'Introduced'};
+  return`<span class="badge ${c[s]}">${l[s]}</span>`;
+}
+const isPassed=b=>['passed','enrolled'].includes(statusOf(b));
+
+// ── FIELD HELPERS ──
+const bN=b=>b.bill_number||b.number||'';
+const bT=b=>b.title||'Untitled';
+const bD=b=>b.description||'';
+const bLA=b=>b.last_action||'';
+const bLD=b=>b.last_action_date||b.status_date||'';
+const bURL=b=>b.state_link||b.url||'';
+const img=p=>p?._img||p?.bio?.social?.image||'';
+const phone=p=>p?._bio?.social?.capitol_phone||p?.bio?.social?.capitol_phone||'';
+const email=p=>p?._bio?.social?.email||p?.bio?.social?.email||'';
+const bioURL=p=>p?._bio?.social?.biography||p?.bio?.social?.biography||'';
+const social=p=>p?._bio?.links?.official||p?.bio?.links?.official||{};
+const init2=n=>(n||'?').split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
+function safeA(o){return JSON.stringify(o).replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');}
+
+// ── STATS BAR ──
+function updateStats(){
+  const p=bills.filter(isPassed).length;
+  const r=bills.length?((p/bills.length)*100).toFixed(1):0;
+  document.getElementById('s1').textContent=bills.length.toLocaleString();
+  document.getElementById('s2').textContent=p.toLocaleString();
+  document.getElementById('s3').textContent=r+'%';
+  document.getElementById('s4').textContent=delegates.length;
+  document.getElementById('s5').textContent=senators.length;
+}
+
+// ── TICKER ──
+function updateTicker(){
+  const passed=bills.filter(isPassed);
+  const txt=passed.slice(0,25).map(b=>`✦ ${bN(b)}: ${bT(b)}`).join('          ');
+  const el=document.getElementById('ticker');
+  el.textContent=txt||'2026 WV Regular Session · All Data Loaded';
+  const dur=Math.round((el.textContent.length*9+window.innerWidth)/72);
+  el.style.animation=`tickScroll ${dur}s linear infinite`;
+}
+
+// ── OVERVIEW ──
+function renderOverview(){
+  const allP=Object.values(pidx);
+  const rC=allP.filter(p=>p.party==='R').length,dC=allP.filter(p=>p.party==='D').length,tot=rC+dC||1;
+  document.getElementById('pbar').innerHTML=`<div class="p-R" style="width:${(rC/tot*100).toFixed(1)}%"><span class="p-lbl">R ${rC}</span></div><div class="p-D" style="width:${(dC/tot*100).toFixed(1)}%"><span class="p-lbl">D ${dC}</span></div>`;
+  document.getElementById('psub').textContent=`Republican ${rC} (${(rC/tot*100).toFixed(0)}%) · Democrat ${dC} (${(dC/tot*100).toFixed(0)}%) · Total ${tot} legislators`;
+
+  // top sponsors
+  const cnts={};
+  Object.entries(smap).forEach(([pid,bs])=>cnts[pid]=bs.length);
+  const top=Object.entries(cnts).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  document.getElementById('top-sponsors').innerHTML=top.map(([pid,cnt],i)=>{
+    const p=pidx[pid];if(!p)return'';
+    const ph=img(p);const pCls=p.party==='R'?'pR':'pD';
+    return`<div class="sp-row" onclick="openPM(${pid})">
+      <span class="sp-rank">${i+1}</span>
+      ${ph?`<img class="sp-photo" src="${ph}" alt="${p.name}" onerror="this.style.display='none'">`:`<div class="sp-photo-init">${init2(p.name)}</div>`}
+      <span class="sp-name">${p.name}</span>
+      <span class="sp-party ${pCls}">${p.party}</span>
+      <span class="sp-cnt">${cnt}</span>
+    </div>`;
+  }).join('');
+
+  const passed=bills.filter(isPassed).length;
+  const failed=bills.filter(b=>statusOf(b)==='failed').length;
+  const com=bills.filter(b=>statusOf(b)==='committee').length;
+  const intro=bills.filter(b=>statusOf(b)==='introduced').length;
+  const hB=bills.filter(b=>bN(b).startsWith('H')).length;
+  const sB=bills.filter(b=>bN(b).startsWith('S')).length;
+
+  document.getElementById('gc-grid').innerHTML=[
+    ['Total Bills',bills.length,''],['Passed/Enrolled',passed,'green'],
+    ['House Bills',hB,''],['Senate Bills',sB,'blue']
+  ].map(([l,v,c])=>`<div class="gc"><div class="gc-n" style="${c?'color:var(--'+c+')':''}">${v.toLocaleString()}</div><div class="gc-l">${l}</div></div>`).join('');
+
+  document.getElementById('status-bd').innerHTML=[
+    ['Passed / Enrolled',passed,'var(--green)'],['In Committee',com,'var(--gold)'],
+    ['Introduced',intro,'var(--muted)'],['Failed / Vetoed',failed,'var(--red)'],
+    ['Passage Rate',bills.length?((passed/bills.length)*100).toFixed(1)+'%':'0%','var(--red)']
+  ].map(([l,v,c])=>`<div class="stat-row"><span class="stat-row-l">${l}</span><strong class="stat-row-v" style="color:${c}">${typeof v==='number'?v.toLocaleString():v}</strong></div>`).join('');
+
+  const picks=bills.filter(isPassed).slice(0,4);
+  const tags=['Signed Into Law','High Impact','Notable','Enacted'];
+  document.getElementById('spot-grid').innerHTML=picks.length
+    ?picks.map((b,i)=>`<div class="spot-card c${i}" onclick='openBM(${safeA(b)})'>
+        <div><span class="sp-tag t${i}">${tags[i]}</span></div>
+        <div class="sp-bnum">${bN(b)}</div>
+        <div class="sp-btitle">${bT(b)}</div>
+        <div class="sp-bdesc">${(bD(b)||bLA(b)).slice(0,110)}…</div>
+      </div>`).join('')
+    :'<p style="color:var(--muted);font-size:0.84rem;grid-column:1/-1;padding:14px 0;">No passed bills detected — see Bills tab for full list.</p>';
+
+  const recent=[...bills].sort((a,b)=>bLD(b).localeCompare(bLD(a))).slice(0,25);
+  document.getElementById('feed').innerHTML=recent.map(b=>`
+    <div class="feed-row" onclick='openBM(${safeA(b)})'>
+      <span class="feed-num">${bN(b)}</span>
+      <span class="feed-title">${bT(b)}</span>
+      <span>${badge(b)}</span>
+      <span class="feed-date">${bLD(b)}</span>
+    </div>`).join('');
+}
+
+// ── BILLS TAB ──
+function renderBills(){
+  const q=(document.getElementById('bsearch').value||'').toLowerCase();
+  const fs=document.getElementById('fstat').value;
+  const fc=document.getElementById('fchamber').value;
+  const so=document.getElementById('fsort').value;
+  fbills=bills.filter(b=>{
+    if(q&&!bN(b).toLowerCase().includes(q)&&!bT(b).toLowerCase().includes(q))return false;
+    if(fs&&statusOf(b)!==fs)return false;
+    if(fc&&!bN(b).startsWith(fc))return false;
+    return true;
+  });
+  if(so==='number')fbills.sort((a,b)=>bN(a).localeCompare(bN(b)));
+  else if(so==='title')fbills.sort((a,b)=>bT(a).localeCompare(bT(b)));
+  else fbills.sort((a,b)=>bLD(b).localeCompare(bLD(a)));
+  bpage=1;
+  document.getElementById('bcnt').textContent=`${fbills.length.toLocaleString()} bills`;
+  renderBP();
+}
+function renderBP(){
+  const st=(bpage-1)*PG,pg=fbills.slice(st,st+PG);
+  document.getElementById('btbody').innerHTML=pg.map(b=>{
+    const sp=(b.sponsors||[]).find(s=>s.sponsor_order===1)||(b.sponsors||[])[0];
+    return`<tr onclick='openBM(${safeA(b)})'>
+      <td><span class="bnum">${bN(b)}</span></td>
+      <td><div class="btitle" title="${bT(b).replace(/"/g,'&quot;')}">${bT(b)}</div></td>
+      <td>${badge(b)}</td>
+      <td style="font-size:0.74rem;color:var(--muted);white-space:nowrap;">${bLD(b)||'—'}</td>
+      <td style="font-size:0.74rem;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${sp?sp.name:'—'}</td>
+    </tr>`;
+  }).join('');
+  const tp=Math.ceil(fbills.length/PG)||1;
+  document.getElementById('bpager').innerHTML=`
+    <span class="pager-info">Page ${bpage} of ${tp} · ${fbills.length.toLocaleString()} bills</span>
+    <div class="pager-btns">
+      <button class="pbtn" onclick="goBP(1)" ${bpage===1?'disabled':''}>«</button>
+      <button class="pbtn" onclick="goBP(${bpage-1})" ${bpage===1?'disabled':''}>‹</button>
+      ${Array.from({length:Math.min(5,tp)},(_,i)=>{const p=Math.max(1,Math.min(bpage-2,tp-4))+i;return p<=tp?`<button class="pbtn ${p===bpage?'on':''}" onclick="goBP(${p})">${p}</button>`:''}).join('')}
+      <button class="pbtn" onclick="goBP(${bpage+1})" ${bpage===tp?'disabled':''}>›</button>
+      <button class="pbtn" onclick="goBP(${tp})" ${bpage===tp?'disabled':''}>»</button>
+    </div>`;
+}
+function goBP(p){const tp=Math.ceil(fbills.length/PG)||1;if(p<1||p>tp)return;bpage=p;renderBP();document.getElementById('tab-bills').scrollIntoView({behavior:'smooth',block:'start'});}
+
+// ── PEOPLE CARDS ──
+function pRate(pid){const bs=smap[pid]||[];if(!bs.length)return null;return Math.round(bs.filter(isPassed).length/bs.length*100);}
+
+function personCard(p){
+  const pid=p.people_id,mb=smap[pid]||[];
+  const passed=mb.filter(isPassed).length,rate=mb.length?Math.round(passed/mb.length*100):0;
+  const ph=img(p),pCls=p.party==='R'?'pR':'pD';
+  const barCol=p.party==='R'?'var(--red)':'var(--blue)';
+  return`<div class="dcard" onclick="openPM(${pid})">
+    <div class="dtop">
+      ${ph?`<img class="dphoto" src="${ph}" alt="${p.name}" onerror="this.outerHTML='<div class=dinit>${init2(p.name)}</div>'">`:`<div class="dinit">${init2(p.name)}</div>`}
+      <div class="dinfo">
+        <div class="dname">${p.name}</div>
+        <div class="dmeta"><span class="${pCls}">${p.party||'?'}</span> · ${p.district||'?'}<br>${p.role||'Legislator'}</div>
+      </div>
+    </div>
+    <div class="dbar-wrap"><div class="dbar"><div class="dbar-fill" style="width:${rate}%;background:${barCol}"></div></div></div>
+    <div class="dstats">
+      <div class="ds"><div class="dsn">${mb.length||'—'}</div><div class="dsl">Sponsored</div></div>
+      <div class="ds"><div class="dsn" style="${passed>0?'color:var(--green)':''}">${mb.length?passed:'—'}</div><div class="dsl">Passed</div></div>
+      <div class="ds"><div class="dsn" style="${rate>0?'color:var(--red)':''}">${mb.length?rate+'%':'—'}</div><div class="dsl">Pass Rate</div></div>
+    </div>
+  </div>`;
+}
+
+function sortP(arr,so){
+  if(so==='district')arr.sort((a,b)=>(parseInt(a.district)||0)-(parseInt(b.district)||0));
+  else if(so==='hi')arr.sort((a,b)=>(smap[b.people_id]||[]).length-(smap[a.people_id]||[]).length);
+  else if(so==='lo')arr.sort((a,b)=>(smap[a.people_id]||[]).length-(smap[b.people_id]||[]).length);
+  else if(so==='rhi')arr.sort((a,b)=>(pRate(b.people_id)||0)-(pRate(a.people_id)||0));
+  else if(so==='rlo')arr.sort((a,b)=>(pRate(a.people_id)||0)-(pRate(b.people_id)||0));
+  else arr.sort((a,b)=>a.name.localeCompare(b.name));
+}
+
+function renderDels(){
+  const q=(document.getElementById('dsearch').value||'').toLowerCase();
+  const fp=document.getElementById('dparty').value,so=document.getElementById('dsort').value;
+  let arr=delegates.filter(p=>(!q||p.name.toLowerCase().includes(q)||String(p.district||'').toLowerCase().includes(q))&&(!fp||p.party===fp));
+  sortP(arr,so);
+  document.getElementById('dcnt').textContent=`${arr.length} delegates`;
+  document.getElementById('dgrid').innerHTML=arr.map(personCard).join('');
+}
+
+function renderSens(){
+  const q=(document.getElementById('ssearch').value||'').toLowerCase();
+  const fp=document.getElementById('sparty').value,so=document.getElementById('ssort').value;
+  let arr=senators.filter(p=>(!q||p.name.toLowerCase().includes(q)||String(p.district||'').toLowerCase().includes(q))&&(!fp||p.party===fp));
+  sortP(arr,so);
+  document.getElementById('scnt').textContent=`${arr.length} senators`;
+  document.getElementById('sgrid').innerHTML=arr.length?arr.map(personCard).join('')
+    :`<p style="color:var(--muted);font-size:0.85rem;padding:20px;grid-column:1/-1;">All legislators shown in House Delegates tab. Senate role classification depends on role_id in data.</p>`;
+}
+
+// ── MODALS ──
+function openPM(pid){
+  const p=pidx[pid];if(!p)return;
+  const mb=smap[pid]||[],passed=mb.filter(isPassed).length,rate=mb.length?Math.round(passed/mb.length*100):0;
+  const ph=img(p),tel=phone(p),em=email(p),bio=bioURL(p),soc=social(p);
+  document.getElementById('mph').src=ph;
+  document.getElementById('mph').style.display=ph?'block':'none';
+  document.getElementById('mkick').textContent=`${p.role||'Legislator'} · ${p.party||'?'} · ${p.district||''}`;
+  document.getElementById('mtitle').textContent=p.name;
+  document.getElementById('msub').textContent=p.party==='R'?'Republican':p.party==='D'?'Democrat':'';
+
+  const socLinks=Object.entries(soc).filter(([k,v])=>v&&v.startsWith('http')).map(([k,v])=>`<a class="soc-link" href="${v}" target="_blank">${k}</a>`).join('');
+
+  let h=`<div class="score-wrap">
+    ${[['Bills Sponsored',mb.length||'—',''],['Bills Passed',mb.length?passed:'—','var(--green)'],['Pass Rate',mb.length?rate+'%':'—','var(--red)'],['District',p.district||'—','']].map(([l,v,c])=>`<div class="sbox2"><div class="sn" style="${c?'color:'+c:''}">${v}</div><div class="sl">${l}</div></div>`).join('')}
+  </div>`;
+  if(tel||em||bio){
+    h+=`<h3>Contact</h3><div class="chip-row">`;
+    if(tel)h+=`<a class="chip" href="tel:${tel}">📞 ${tel}</a>`;
+    if(em)h+=`<a class="chip" href="mailto:${em}">✉ ${em}</a>`;
+    if(bio)h+=`<a class="chip" href="${bio}" target="_blank">🏛 Official Page</a>`;
+    h+=`</div>`;
+  }
+  if(socLinks)h+=`<h3>Social Media</h3><div class="soc-links">${socLinks}</div>`;
+
+  h+=`<h3>Bills Sponsored This Session (${mb.length})</h3>`;
+  if(!mb.length){h+=`<p style="color:var(--muted);font-size:0.83rem;">No bills found for this legislator in the sponsor data.</p>`;}
+  else{
+    h+=`<ul class="mini-list">`+mb.slice(0,40).map(b=>`<li class="mini-item"><span class="mini-num">${bN(b)}</span><span style="flex:1">${bT(b)}</span><span style="flex-shrink:0">${badge(b)}</span></li>`).join('');
+    if(mb.length>40)h+=`<li class="mini-item" style="color:var(--muted);font-style:italic;">…and ${mb.length-40} more</li>`;
+    h+=`</ul>`;
+  }
+  document.getElementById('mbd').innerHTML=h;
+  document.getElementById('mwrap').classList.add('open');
+}
+
+function openBM(bill){
+  const sp=(bill.sponsors||[]).find(s=>s.sponsor_order===1)||(bill.sponsors||[])[0];
+  const ph=sp?img(sp):'';
+  document.getElementById('mph').src=ph;
+  document.getElementById('mph').style.display=ph?'block':'none';
+  document.getElementById('mkick').textContent=bN(bill)+(bill.body?' · '+bill.body:'');
+  document.getElementById('mtitle').textContent=bT(bill);
+  document.getElementById('msub').textContent=bLD(bill)?`Last action: ${bLD(bill)}`:'';
+
+  const allSp=(bill.sponsors||[]).map(s=>`<span class="chip" onclick="closeM();openPM(${s.people_id})" style="cursor:pointer;">${s.name} (${s.party||'?'})</span>`).join('');
+  const votes=bill.votes||[];
+  let vh='';
+  if(votes.length){
+    vh=`<h3>Vote Record</h3>`;
+    votes.forEach(v=>{
+      const tot=(v.yea||0)+(v.nay||0),yp=tot?Math.round(v.yea/tot*100):0;
+      vh+=`<div class="vbar-wrap"><div class="vbar-lbl"><span>${v.desc||v.chamber||'Vote'} — ${v.date||''}</span><span>${v.yea||0} Yea / ${v.nay||0} Nay</span></div><div class="vbar"><div class="vbar-y" style="width:${yp}%"></div></div></div>`;
+    });
+  }
+  const hist=(bill.history||[]).slice(-6).reverse();
+  let hh='';
+  if(hist.length){
+    hh=`<h3>Legislative History</h3><ul class="mini-list">`+hist.map(h=>`<li class="mini-item"><span class="mini-num" style="color:var(--muted)">${h.date||''}</span><span>${h.action||''}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--muted)">${h.chamber||''}</span></li>`).join('')+`</ul>`;
+  }
+
+  document.getElementById('mbd').innerHTML=`
+    <div class="score-wrap">
+      <div class="sbox2"><div class="sn">${badge(bill)}</div><div class="sl">Status</div></div>
+      <div class="sbox2"><div class="sn" style="font-size:1rem;font-family:'IBM Plex Mono',monospace">${bLD(bill)||'—'}</div><div class="sl">Last Action</div></div>
+      <div class="sbox2"><div class="sn" style="font-size:1rem;font-family:'IBM Plex Mono',monospace">${bill.body||'—'}</div><div class="sl">Chamber</div></div>
+    </div>
+    ${bD(bill)?`<h3>Description</h3><p style="font-size:0.83rem;line-height:1.65;margin-bottom:4px">${bD(bill)}</p>`:''}
+    <h3>Sponsors</h3><div class="chip-row">${allSp||'—'}</div>
+    ${vh}${hh}
+    ${bURL(bill)?`<h3>Source</h3><p><a href="${bURL(bill)}" target="_blank" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--red)">${bURL(bill)}</a></p>`:''}`;
+  document.getElementById('mwrap').classList.add('open');
+}
+
+function closeM(){document.getElementById('mwrap').classList.remove('open');}
+function maybeClose(e){if(e.target===document.getElementById('mwrap'))closeM();}
+function showTab(n,btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+n).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
