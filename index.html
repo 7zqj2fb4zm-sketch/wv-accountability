@@ -378,37 +378,185 @@ let DATA,bills=[],delegates=[],senators=[],smap={},pidx={},amap={};
 let bpage=1,fbills=[];
 const PG=50;
 
-// ── SCORECARD ──
+// ── SCORING SYSTEM ──────────────────────────────────────────
+// Grade weights (per user priority ranking):
+//   35% — Abstention rate on contested votes (avoiding tough votes = red flag)
+//   25% — Bill impact (substantive policy vs ceremonial)
+//   25% — Attendance (% of all votes showed up for)
+//   15% — Effectiveness (pass rate on sponsored bills that had a vote)
+
+// Impactful bill subject keywords
+const IMPACT_KEYWORDS=[
+  'health','medicaid','medicare','insurance','hospital','mental','addiction','opioid',
+  'education','school','teacher','student','university','college',
+  'tax','budget','appropriat','revenue','fiscal','fund',
+  'environment','water','air','mine','coal','energy','utility',
+  'road','infrastructure','bridge','broadband','transpor',
+  'child','family','welfare','foster','juvenile','abuse',
+  'voting','election','ballot','campaign',
+  'crime','police','court','prison','sentenc','criminal',
+  'wage','employ','workforce','business','economic',
+  'pension','retirement','benefit','insurance',
+];
+
+function isBillImpactful(b){
+  const txt=(bT(b)+' '+bD(b)).toLowerCase();
+  return IMPACT_KEYWORDS.some(k=>txt.includes(k));
+}
+
+// A "contested" vote = at least 10% voted against the majority
+function isContested(rc){
+  const yea=(rc.votes||[]).filter(v=>v.vote_id===1).length;
+  const nay=(rc.votes||[]).filter(v=>v.vote_id===2).length;
+  const tot=yea+nay;
+  if(tot<5)return false;
+  const minority=Math.min(yea,nay);
+  return(minority/tot)>=0.10;
+}
+
+// Pre-compute per-person stats — called once after roll_calls loaded
+let pstats={}; // pid -> {attended,total,abstainedContested,totalContested,impactBills,passedImpact}
+function buildPstats(){
+  pstats={};
+  const allPids=Object.keys(pidx);
+  allPids.forEach(pid=>{
+    pstats[pid]={attended:0,total:0,abstainedContested:0,totalContested:0};
+  });
+
+  (DATA.roll_calls||[]).forEach(rc=>{
+    const contested=isContested(rc);
+    const votes=rc.votes||[];
+    // find all pids who appear in this roll call
+    votes.forEach(v=>{
+      const pid=v.people_id;
+      if(!pstats[pid])pstats[pid]={attended:0,total:0,abstainedContested:0,totalContested:0};
+      pstats[pid].total++;
+      if(v.vote_id===1||v.vote_id===2) pstats[pid].attended++;
+      if(contested){
+        pstats[pid].totalContested++;
+        // abstained = NV(3), Absent(4), Excused(5)
+        if(v.vote_id>=3) pstats[pid].abstainedContested++;
+      }
+    });
+  });
+
+  // bill impact stats
+  Object.keys(smap).forEach(pid=>{
+    const mb=smap[pid]||[];
+    const impactful=mb.filter(isBillImpactful);
+    const passedImpact=impactful.filter(isPassed).length;
+    if(!pstats[pid])pstats[pid]={attended:0,total:0,abstainedContested:0,totalContested:0};
+    pstats[pid].impactBills=impactful.length;
+    pstats[pid].passedImpact=passedImpact;
+    pstats[pid].totalBills=mb.length;
+    pstats[pid].passedBills=mb.filter(isPassed).length;
+  });
+}
+
 function attendancePct(pid){
-  const a=amap[pid];
-  if(!a||!a.total)return null;
-  return Math.round(a.present/a.total*100);
+  const s=pstats[pid];
+  if(!s||!s.total)return null;
+  return Math.round(s.attended/s.total*100);
+}
+
+function abstentionPct(pid){
+  const s=pstats[pid];
+  if(!s||!s.totalContested)return null;
+  return Math.round(s.abstainedContested/s.totalContested*100);
 }
 
 function scorecard(pid){
-  const att=attendancePct(pid);
-  const mb=smap[pid]||[];
-  const passed=mb.filter(isPassed).length;
-  const passRate=mb.length?Math.round(passed/mb.length*100):null;
+  const s=pstats[pid];
+  if(!s)return{grade:'?',score:null,color:'var(--muted)',summary:'No data available.'};
 
-  // Grade weights: attendance 50%, pass rate 30%, activity 20%
-  let score=0, parts=0;
-  if(att!==null){score+=att*0.5; parts+=0.5;}
-  if(passRate!==null){score+=passRate*0.3; parts+=0.3;}
-  if(mb.length>0){
-    // activity: 20+ bills = full marks, scaled down below that
-    const actScore=Math.min(mb.length/20*100,100);
-    score+=actScore*0.2; parts+=0.2;
+  // 1. Contested vote participation (35%) — higher abstention = lower score
+  let abstScore=null;
+  if(s.totalContested>0){
+    const abstPct=s.abstainedContested/s.totalContested;
+    abstScore=Math.round((1-abstPct)*100);
   }
-  if(parts===0)return{grade:'?',score:null,color:'var(--muted)'};
-  const final=Math.round(score/parts);
+
+  // 2. Bill impact (25%) — ratio of impactful bills to total, weighted by pass rate
+  let impactScore=null;
+  const totalBills=s.totalBills||0;
+  const impactBills=s.impactBills||0;
+  if(totalBills>0){
+    const impactRatio=impactBills/totalBills;
+    const passBonus=impactBills>0?(s.passedImpact||0)/impactBills:0;
+    impactScore=Math.round((impactRatio*0.6+passBonus*0.4)*100);
+  }
+
+  // 3. Attendance (25%)
+  let attScore=null;
+  if(s.total>0) attScore=Math.round(s.attended/s.total*100);
+
+  // 4. Bill effectiveness (15%) — pass rate on all sponsored bills
+  let effScore=null;
+  if(totalBills>0) effScore=Math.round((s.passedBills||0)/totalBills*100);
+
+  // Weighted composite — only include components we have data for
+  let weighted=0, weight=0;
+  if(abstScore!==null){weighted+=abstScore*0.35; weight+=0.35;}
+  if(impactScore!==null){weighted+=impactScore*0.25; weight+=0.25;}
+  if(attScore!==null){weighted+=attScore*0.25; weight+=0.25;}
+  if(effScore!==null){weighted+=effScore*0.15; weight+=0.15;}
+
+  if(weight===0)return{grade:'?',score:null,color:'var(--muted)',summary:'Insufficient data to grade.'};
+
+  const final=Math.round(weighted/weight);
+
   let grade,color;
-  if(final>=90){grade='A';color='var(--green)';}
-  else if(final>=80){grade='B';color='#2d7d9a';}
-  else if(final>=65){grade='C';color='var(--gold)';}
-  else if(final>=50){grade='D';color:'#e07b30';}
+  if(final>=88){grade='A';color='var(--green)';}
+  else if(final>=76){grade='B';color='#2d7d9a';}
+  else if(final>=62){grade='C';color='var(--gold)';}
+  else if(final>=48){grade='D';color:'#e07b30';}
   else{grade='F';color='var(--red)';}
-  return{grade,score:final,color};
+
+  // ── PLAIN-LANGUAGE SUMMARY ──
+  const att=attScore!==null?attScore+'%':'unknown';
+  const abst=abstScore!==null?(100-abstScore)+'%':'unknown';
+  const party=(pidx[pid]?.party==='R'?'Republican':'Democrat')||'their party';
+  // party-line vote calculation
+  let partyLine='';
+  // figure out majority party vote per roll call and compare
+  // simplified: count votes where they voted with the party majority
+  let withParty=0,totalPartyVotes=0;
+  const myParty=pidx[pid]?.party;
+  if(myParty){
+    (DATA.roll_calls||[]).forEach(rc=>{
+      const myVote=(rc.votes||[]).find(v=>v.people_id==pid);
+      if(!myVote||myVote.vote_id>2)return;
+      // find majority vote among same-party members
+      const partyVotes=(rc.votes||[]).filter(v=>v.party===myParty&&(v.vote_id===1||v.vote_id===2));
+      if(partyVotes.length<3)return;
+      const partyYea=partyVotes.filter(v=>v.vote_id===1).length;
+      const partyMajority=partyYea>partyVotes.length/2?1:2;
+      totalPartyVotes++;
+      if(myVote.vote_id===partyMajority)withParty++;
+    });
+    if(totalPartyVotes>10){
+      partyLine=` Voted with ${party} majority ${Math.round(withParty/totalPartyVotes*100)}% of the time.`;
+    }
+  }
+
+  const billTxt=totalBills>0
+    ?`Sponsored ${totalBills} bill${totalBills!==1?'s':''} — ${s.passedBills||0} passed${impactBills>0?`, ${impactBills} on substantive policy issues`:''}. `
+    :`No bills sponsored this session. `;
+
+  const absentTxt=abstScore!==null&&(100-abstScore)>15
+    ?` Ducked ${abst} of contested votes.`
+    :abstScore!==null?' Voted on contested issues.':``;
+
+  let verdict='';
+  if(final>=88) verdict=`<strong style="color:var(--green)">Verdict: One of the most engaged legislators this session.</strong>`;
+  else if(final>=76) verdict=`<strong style="color:#2d7d9a">Verdict: Above average — solid record with room to grow.</strong>`;
+  else if(final>=62) verdict=`<strong style="color:var(--gold)">Verdict: Mixed record — shows up but avoids accountability on key votes.</strong>`;
+  else if(final>=48) verdict=`<strong style="color:#e07b30">Verdict: Poor performance — frequently absent or disengaged on what matters.</strong>`;
+  else verdict=`<strong style="color:var(--red)">Verdict: Failing their constituents — consistent pattern of absence and inaction.</strong>`;
+
+  const summary=`Attended ${att} of recorded votes.${absentTxt} ${billTxt}${partyLine} ${verdict}`;
+
+  return{grade,score:final,color,summary};
 }
 
 // ── BOOT — auto-fetch data file ──
@@ -460,89 +608,10 @@ function init(){
   document.getElementById('loader').style.display='none';
   document.getElementById('app').style.display='block';
 
-  // ── BUILD ATTENDANCE MAP from roll_calls ──
-  // amap[people_id] = { present, absent, total }
-  amap={};
-  (DATA.roll_calls||[]).forEach(rc=>{
-    (rc.votes||[]).forEach(v=>{
-      const pid=v.people_id;
-      if(!amap[pid])amap[pid]={present:0,absent:0,total:0};
-      amap[pid].total++;
-      // LegiScan vote values: 1=Yea,2=Nay,3=NV(not voting),4=Absent,5=Excused
-      if(v.vote_id===1||v.vote_id===2)amap[pid].present++;
-      else amap[pid].absent++;
-    });
-  });
+  // build per-person stats from roll_calls
+  buildPstats();
 
   updateStats();updateTicker();renderOverview();renderBills();renderDels();renderSens();
-}
-
-// ── HALL OF SHAME / FAME KEYWORDS ──
-const SHAME_KEYWORDS=[
-  // healthcare
-  'medicaid','medicare cut','health benefit','insurance cut','coverage reduction','pharmacy','hospital clos',
-  // education
-  'school funding','education cut','teacher pay','public school','school voucher','defund','budget reduc',
-  // voting
-  'voter id','voting restriction','election integrity','ballot','voter roll','polling',
-  // environment
-  'mining regulation','coal','surface mine','stream buffer','water quality','environmental protection','epa','pollution permit','chemical',
-];
-const FAME_KEYWORDS=[
-  // mental health & addiction
-  'mental health','substance abuse','addiction','opioid','recovery','behavioral health','suicide','counseling',
-  // child welfare
-  'child welfare','foster care','child abuse','juvenile','family service','child protective','pediatric','child health',
-  // jobs & economy
-  'workforce','job creation','economic development','small business','apprenticeship','job training','unemployment',
-  // environment positive
-  'clean water','clean air','conservation','environmental restoration','renewable','recycling','wildlife',
-];
-
-function matchesKeywords(b, keywords){
-  const text=((bT(b)+' '+bD(b)+' '+bLA(b)).toLowerCase());
-  return keywords.some(k=>text.includes(k));
-}
-
-function hallCard(b, type){
-  const sp=(b.sponsors||[]).find(s=>s.sponsor_order===1)||(b.sponsors||[])[0];
-  const spPerson=sp?pidx[sp.people_id]:null;
-  const spPhoto=spPerson?img(spPerson):(sp?.bio?.social?.image||'');
-  const spName=sp?sp.name:'Unknown Sponsor';
-  const spParty=sp?sp.party||'?':'?';
-  const tagLabel=type==='shame'?'Harmful Legislation':'Positive Legislation';
-  return`<div class="hall-card ${type}" onclick='openBM(${safeA(b)})'>
-    <div class="hall-card-inner">
-      <div>
-        <div class="hall-tag ${type}">${tagLabel}</div>
-        <div class="hall-bnum">${bN(b)}</div>
-        <div class="hall-btitle">${bT(b)}</div>
-        <div class="hall-bdesc">${(bD(b)||bLA(b)).slice(0,120)}${(bD(b)||bLA(b)).length>120?'…':''}</div>
-        <div class="hall-sponsor" onclick="event.stopPropagation();${spPerson?`openPM(${spPerson.people_id})`:''}">
-          ${spPhoto
-            ?`<img class="hall-sponsor-photo" src="${spPhoto}" alt="${spName}" onerror="this.style.display='none'">`
-            :`<div style="width:24px;height:24px;border-radius:50%;background:var(--paper3);border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:0.65rem;color:var(--muted);">${init2(spName)}</div>`}
-          <span class="hall-sponsor-name">
-            Sponsored by <strong>${spName}</strong>
-            <span style="color:${spParty==='R'?'var(--red)':'var(--blue)'}"> (${spParty})</span>
-            ${spPerson?` · Grade: <strong style="color:${scorecard(spPerson.people_id).color}">${scorecard(spPerson.people_id).grade}</strong>`:''}
-          </span>
-        </div>
-      </div>
-      <div style="flex-shrink:0;margin-left:8px;">${badge(b)}</div>
-    </div>
-  </div>`;
-}
-
-function renderHalls(){
-  const shameBills=bills.filter(b=>matchesKeywords(b,SHAME_KEYWORDS)).slice(0,8);
-  const fameBills =bills.filter(b=>matchesKeywords(b,FAME_KEYWORDS)).slice(0,8);
-  document.getElementById('hall-shame').innerHTML=shameBills.length
-    ?shameBills.map(b=>hallCard(b,'shame')).join('')
-    :`<p class="hall-empty">No bills matched harmful legislation keywords.</p>`;
-  document.getElementById('hall-fame').innerHTML=fameBills.length
-    ?fameBills.map(b=>hallCard(b,'fame')).join('')
-    :`<p class="hall-empty">No bills matched positive legislation keywords.</p>`;
 }
 
 // ── STATUS ──
@@ -718,8 +787,10 @@ function personCard(p){
   const ph=img(p),pCls=p.party==='R'?'pR':'pD';
   const barCol=p.party==='R'?'var(--red)':'var(--blue)';
   const att=attendancePct(pid);
+  const abst=abstentionPct(pid);
   const sc=scorecard(pid);
   const attCol=att===null?'':att>=90?'color:var(--green)':att>=75?'color:var(--gold)':'color:var(--red)';
+  const abstCol=abst===null?'':abst<=10?'color:var(--green)':abst<=25?'color:var(--gold)':'color:var(--red)';
   return`<div class="dcard" onclick="openPM(${pid})">
     <div class="dtop">
       ${ph?`<img class="dphoto" src="${ph}" alt="${p.name}" onerror="this.outerHTML='<div class=dinit>${init2(p.name)}</div>'">`:`<div class="dinit">${init2(p.name)}</div>`}
@@ -732,11 +803,11 @@ function personCard(p){
         <div style="font-family:'IBM Plex Mono',monospace;font-size:0.46rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);">Grade</div>
       </div>
     </div>
-    <div class="dbar-wrap"><div class="dbar"><div class="dbar-fill" style="width:${att!==null?att:rate}%;background:${barCol}"></div></div></div>
+    <div class="dbar-wrap"><div class="dbar"><div class="dbar-fill" style="width:${att!==null?att:50}%;background:${barCol}"></div></div></div>
     <div class="dstats">
       <div class="ds"><div class="dsn" style="${attCol}">${att!==null?att+'%':'—'}</div><div class="dsl">Attendance</div></div>
-      <div class="ds"><div class="dsn">${mb.length||'—'}</div><div class="dsl">Sponsored</div></div>
-      <div class="ds"><div class="dsn" style="${rate>0?'color:var(--red)':''}">${mb.length?rate+'%':'—'}</div><div class="dsl">Pass Rate</div></div>
+      <div class="ds"><div class="dsn" style="${abstCol}">${abst!==null?abst+'%':'—'}</div><div class="dsl">Ducked Votes</div></div>
+      <div class="ds"><div class="dsn">${mb.length||'—'}</div><div class="dsl">Bills Filed</div></div>
     </div>
   </div>`;
 }
@@ -779,8 +850,9 @@ function openPM(pid){
   const mb=smap[pid]||[],passed=mb.filter(isPassed).length,rate=mb.length?Math.round(passed/mb.length*100):0;
   const ph=img(p),tel=phone(p),em=email(p),bio=bioURL(p),soc=social(p);
   const att=attendancePct(pid);
+  const abst=abstentionPct(pid);
   const sc=scorecard(pid);
-  const attA=amap[pid];
+  const st=pstats[pid]||{};
   document.getElementById('mph').src=ph;
   document.getElementById('mph').style.display=ph?'block':'none';
   document.getElementById('mkick').textContent=`${p.role||'Legislator'} · ${p.party||'?'} · ${p.district||''}`;
@@ -791,12 +863,12 @@ function openPM(pid){
 
   let h=`<div class="score-wrap">
     <div class="sbox2"><div class="sn" style="color:${sc.color};font-size:2.4rem">${sc.grade}</div><div class="sl">Overall Grade</div></div>
-    <div class="sbox2"><div class="sn" style="${att!==null&&att<80?'color:var(--red)':att!==null?'color:var(--green)':''}">${att!==null?att+'%':'—'}</div><div class="sl">Attendance${attA?` (${attA.present}/${attA.total} votes)`:''}</div></div>
+    <div class="sbox2"><div class="sn" style="${att!==null&&att<80?'color:var(--red)':att!==null?'color:var(--green)':''}">${att!==null?att+'%':'—'}</div><div class="sl">Attendance${st.total?` (${st.attended}/${st.total})`:''}</div></div>
+    <div class="sbox2"><div class="sn" style="${abst!==null&&abst>20?'color:var(--red)':abst!==null?'color:var(--green)':''}">${abst!==null?abst+'%':'—'}</div><div class="sl">Ducked Contested Votes${st.totalContested?` (${st.abstainedContested}/${st.totalContested})`:''}</div></div>
     <div class="sbox2"><div class="sn">${mb.length||'—'}</div><div class="sl">Bills Sponsored</div></div>
-    <div class="sbox2"><div class="sn" style="color:var(--red)">${mb.length?rate+'%':'—'}</div><div class="sl">Pass Rate</div></div>
   </div>
-  <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);margin-bottom:16px;padding:8px;background:var(--paper2);border:1px solid var(--border);">
-    Grade based on: Attendance (50%) · Pass Rate (30%) · Legislative Activity (20%)
+  <div style="padding:14px 16px;background:var(--paper2);border:1px solid var(--border);margin-bottom:16px;font-size:0.83rem;line-height:1.7;border-left:3px solid ${sc.color}">
+    ${sc.summary}
   </div>`;
   if(tel||em||bio){
     h+=`<h3>Contact</h3><div class="chip-row">`;
