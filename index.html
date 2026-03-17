@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WV Accountability Project — 2026 Session</title>
+<title>West Virginia Legislative Accountability Project — 2026 Session</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -192,7 +192,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="mast-flag">
     <div class="mf-side">Est. 2026 · Public Record</div>
     <div class="mf-center">
-      <h1>WV ACCOUNTABILITY PROJECT</h1>
+      <h1>WV LEGISLATIVE ACCOUNTABILITY PROJECT</h1>
       <div class="sub">2026 Regular Session · West Virginia Legislature · Jan 14 – Mar 14</div>
     </div>
     <div class="mf-side right" id="hdr-date"></div>
@@ -208,7 +208,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 <div class="ticker"><span class="ticker-inner" id="ticker">Loading session data…</span></div>
 
 <div id="loader">
-  <h2>WV Accountability Project</h2>
+  <h2>WV Legislative Accountability Project</h2>
   <p>Loading 2026 session data…</p>
   <div class="spinner"></div>
   <div class="err-box" id="err-box">
@@ -292,6 +292,10 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         <select class="fsel" id="dsort" onchange="renderDels()">
           <option value="name">Name A–Z</option>
           <option value="district">District</option>
+          <option value="grade_hi">Best Grade</option>
+          <option value="grade_lo">Worst Grade</option>
+          <option value="att_hi">Best Attendance</option>
+          <option value="att_lo">Worst Attendance</option>
           <option value="hi">Most Bills</option>
           <option value="lo">Fewest Bills</option>
           <option value="rhi">Highest Pass Rate</option>
@@ -340,21 +344,54 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 </div>
 
 <script>
-let DATA,bills=[],delegates=[],senators=[],smap={},pidx={};
+let DATA,bills=[],delegates=[],senators=[],smap={},pidx={},amap={};
 let bpage=1,fbills=[];
 const PG=50;
+
+// ── SCORECARD ──
+function attendancePct(pid){
+  const a=amap[pid];
+  if(!a||!a.total)return null;
+  return Math.round(a.present/a.total*100);
+}
+
+function scorecard(pid){
+  const att=attendancePct(pid);
+  const mb=smap[pid]||[];
+  const passed=mb.filter(isPassed).length;
+  const passRate=mb.length?Math.round(passed/mb.length*100):null;
+
+  // Grade weights: attendance 50%, pass rate 30%, activity 20%
+  let score=0, parts=0;
+  if(att!==null){score+=att*0.5; parts+=0.5;}
+  if(passRate!==null){score+=passRate*0.3; parts+=0.3;}
+  if(mb.length>0){
+    // activity: 20+ bills = full marks, scaled down below that
+    const actScore=Math.min(mb.length/20*100,100);
+    score+=actScore*0.2; parts+=0.2;
+  }
+  if(parts===0)return{grade:'?',score:null,color:'var(--muted)'};
+  const final=Math.round(score/parts);
+  let grade,color;
+  if(final>=90){grade='A';color='var(--green)';}
+  else if(final>=80){grade='B';color='#2d7d9a';}
+  else if(final>=65){grade='C';color='var(--gold)';}
+  else if(final>=50){grade='D';color:'#e07b30';}
+  else{grade='F';color='var(--red)';}
+  return{grade,score:final,color};
+}
 
 // ── BOOT — auto-fetch data file ──
 document.getElementById('hdr-date').textContent=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
 
 async function autoLoad(){
   try{
-    const res=await fetch('wv_data_full.json');
+    const res=await fetch('wv_data_votes.json');
     if(!res.ok)throw new Error('HTTP '+res.status);
     DATA=await res.json();
     init();
   }catch(e){
-    console.error('Failed to load wv_data_full.json:',e);
+    console.error('Failed to load wv_data_votes.json:',e);
     document.querySelector('.spinner').style.display='none';
     document.getElementById('err-box').style.display='block';
   }
@@ -392,6 +429,21 @@ function init(){
 
   document.getElementById('loader').style.display='none';
   document.getElementById('app').style.display='block';
+
+  // ── BUILD ATTENDANCE MAP from roll_calls ──
+  // amap[people_id] = { present, absent, total }
+  amap={};
+  (DATA.roll_calls||[]).forEach(rc=>{
+    (rc.votes||[]).forEach(v=>{
+      const pid=v.people_id;
+      if(!amap[pid])amap[pid]={present:0,absent:0,total:0};
+      amap[pid].total++;
+      // LegiScan vote values: 1=Yea,2=Nay,3=NV(not voting),4=Absent,5=Excused
+      if(v.vote_id===1||v.vote_id===2)amap[pid].present++;
+      else amap[pid].absent++;
+    });
+  });
+
   updateStats();updateTicker();renderOverview();renderBills();renderDels();renderSens();
 }
 
@@ -567,6 +619,9 @@ function personCard(p){
   const passed=mb.filter(isPassed).length,rate=mb.length?Math.round(passed/mb.length*100):0;
   const ph=img(p),pCls=p.party==='R'?'pR':'pD';
   const barCol=p.party==='R'?'var(--red)':'var(--blue)';
+  const att=attendancePct(pid);
+  const sc=scorecard(pid);
+  const attCol=att===null?'':att>=90?'color:var(--green)':att>=75?'color:var(--gold)':'color:var(--red)';
   return`<div class="dcard" onclick="openPM(${pid})">
     <div class="dtop">
       ${ph?`<img class="dphoto" src="${ph}" alt="${p.name}" onerror="this.outerHTML='<div class=dinit>${init2(p.name)}</div>'">`:`<div class="dinit">${init2(p.name)}</div>`}
@@ -574,11 +629,15 @@ function personCard(p){
         <div class="dname">${p.name}</div>
         <div class="dmeta"><span class="${pCls}">${p.party||'?'}</span> · ${p.district||'?'}<br>${p.role||'Legislator'}</div>
       </div>
+      <div style="text-align:center;flex-shrink:0;padding-left:8px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;line-height:1;color:${sc.color}">${sc.grade}</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.46rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);">Grade</div>
+      </div>
     </div>
-    <div class="dbar-wrap"><div class="dbar"><div class="dbar-fill" style="width:${rate}%;background:${barCol}"></div></div></div>
+    <div class="dbar-wrap"><div class="dbar"><div class="dbar-fill" style="width:${att!==null?att:rate}%;background:${barCol}"></div></div></div>
     <div class="dstats">
+      <div class="ds"><div class="dsn" style="${attCol}">${att!==null?att+'%':'—'}</div><div class="dsl">Attendance</div></div>
       <div class="ds"><div class="dsn">${mb.length||'—'}</div><div class="dsl">Sponsored</div></div>
-      <div class="ds"><div class="dsn" style="${passed>0?'color:var(--green)':''}">${mb.length?passed:'—'}</div><div class="dsl">Passed</div></div>
       <div class="ds"><div class="dsn" style="${rate>0?'color:var(--red)':''}">${mb.length?rate+'%':'—'}</div><div class="dsl">Pass Rate</div></div>
     </div>
   </div>`;
@@ -590,6 +649,10 @@ function sortP(arr,so){
   else if(so==='lo')arr.sort((a,b)=>(smap[a.people_id]||[]).length-(smap[b.people_id]||[]).length);
   else if(so==='rhi')arr.sort((a,b)=>(pRate(b.people_id)||0)-(pRate(a.people_id)||0));
   else if(so==='rlo')arr.sort((a,b)=>(pRate(a.people_id)||0)-(pRate(b.people_id)||0));
+  else if(so==='att_hi')arr.sort((a,b)=>(attendancePct(b.people_id)||0)-(attendancePct(a.people_id)||0));
+  else if(so==='att_lo')arr.sort((a,b)=>(attendancePct(a.people_id)||0)-(attendancePct(b.people_id)||0));
+  else if(so==='grade_hi')arr.sort((a,b)=>(scorecard(b.people_id).score||0)-(scorecard(a.people_id).score||0));
+  else if(so==='grade_lo')arr.sort((a,b)=>(scorecard(a.people_id).score||0)-(scorecard(b.people_id).score||0));
   else arr.sort((a,b)=>a.name.localeCompare(b.name));
 }
 
@@ -617,6 +680,9 @@ function openPM(pid){
   const p=pidx[pid];if(!p)return;
   const mb=smap[pid]||[],passed=mb.filter(isPassed).length,rate=mb.length?Math.round(passed/mb.length*100):0;
   const ph=img(p),tel=phone(p),em=email(p),bio=bioURL(p),soc=social(p);
+  const att=attendancePct(pid);
+  const sc=scorecard(pid);
+  const attA=amap[pid];
   document.getElementById('mph').src=ph;
   document.getElementById('mph').style.display=ph?'block':'none';
   document.getElementById('mkick').textContent=`${p.role||'Legislator'} · ${p.party||'?'} · ${p.district||''}`;
@@ -626,7 +692,13 @@ function openPM(pid){
   const socLinks=Object.entries(soc).filter(([k,v])=>v&&v.startsWith('http')).map(([k,v])=>`<a class="soc-link" href="${v}" target="_blank">${k}</a>`).join('');
 
   let h=`<div class="score-wrap">
-    ${[['Bills Sponsored',mb.length||'—',''],['Bills Passed',mb.length?passed:'—','var(--green)'],['Pass Rate',mb.length?rate+'%':'—','var(--red)'],['District',p.district||'—','']].map(([l,v,c])=>`<div class="sbox2"><div class="sn" style="${c?'color:'+c:''}">${v}</div><div class="sl">${l}</div></div>`).join('')}
+    <div class="sbox2"><div class="sn" style="color:${sc.color};font-size:2.4rem">${sc.grade}</div><div class="sl">Overall Grade</div></div>
+    <div class="sbox2"><div class="sn" style="${att!==null&&att<80?'color:var(--red)':att!==null?'color:var(--green)':''}">${att!==null?att+'%':'—'}</div><div class="sl">Attendance${attA?` (${attA.present}/${attA.total} votes)`:''}</div></div>
+    <div class="sbox2"><div class="sn">${mb.length||'—'}</div><div class="sl">Bills Sponsored</div></div>
+    <div class="sbox2"><div class="sn" style="color:var(--red)">${mb.length?rate+'%':'—'}</div><div class="sl">Pass Rate</div></div>
+  </div>
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);margin-bottom:16px;padding:8px;background:var(--paper2);border:1px solid var(--border);">
+    Grade based on: Attendance (50%) · Pass Rate (30%) · Legislative Activity (20%)
   </div>`;
   if(tel||em||bio){
     h+=`<h3>Contact</h3><div class="chip-row">`;
