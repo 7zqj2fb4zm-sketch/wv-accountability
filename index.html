@@ -36,18 +36,13 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 @keyframes tickScroll{from{transform:translateX(100vw);}to{transform:translateX(-100%);}}
 
 /* LOADER */
-#loader{max-width:580px;margin:80px auto;padding:52px;text-align:center;background:var(--paper);border:2px solid var(--ink);box-shadow:8px 8px 0 var(--ink);animation:fadeUp .35s ease;}
+#loader{max-width:480px;margin:100px auto;padding:48px;text-align:center;background:var(--paper);border:2px solid var(--ink);box-shadow:8px 8px 0 var(--ink);animation:fadeUp .35s ease;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
-.l-kicker{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:14px;}
-#loader h2{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:0.06em;margin-bottom:10px;}
-#loader p{color:var(--muted);font-size:0.87rem;line-height:1.65;margin-bottom:30px;}
-.dz{border:2px dashed var(--border2);padding:44px 32px;cursor:pointer;background:var(--paper2);transition:all .18s;margin-bottom:10px;}
-.dz:hover,.dz.over{border-color:var(--ink);background:var(--paper);}
-.dz .icon{font-size:2.6rem;margin-bottom:10px;}
-.dz p{font-size:0.82rem;color:var(--muted);margin:0;}
-.dz strong{font-family:'IBM Plex Mono',monospace;font-size:0.76rem;color:var(--ink);}
-#finput{display:none;}
-.hint{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--muted);letter-spacing:0.04em;}
+#loader h2{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.06em;margin-bottom:10px;}
+#loader p{color:var(--muted);font-size:0.84rem;line-height:1.6;}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;margin:24px auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.err-box{background:#fdf2f1;border:1px solid var(--red);padding:16px;margin-top:20px;font-size:0.82rem;color:var(--red);display:none;}
 
 /* APP */
 #app{display:none;}
@@ -213,15 +208,12 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 <div class="ticker"><span class="ticker-inner" id="ticker">Loading session data…</span></div>
 
 <div id="loader">
-  <div class="l-kicker">★ Load Session Data ★</div>
-  <h2>Drop Your Data File</h2>
-  <p>Load <strong>wv_data_full.json</strong> from your Desktop. Runs entirely in your browser — nothing leaves your machine.</p>
-  <div class="dz" id="dz" onclick="document.getElementById('finput').click()">
-    <div class="icon">📂</div>
-    <p><strong>Click to browse</strong> or drag &amp; drop <strong>wv_data_full.json</strong></p>
+  <h2>WV Accountability Project</h2>
+  <p>Loading 2026 session data…</p>
+  <div class="spinner"></div>
+  <div class="err-box" id="err-box">
+    ⚠ Could not load session data. Make sure <strong>wv_data_full.json</strong> is uploaded to the same GitHub repository as this file.
   </div>
-  <input type="file" id="finput" accept=".json">
-  <div class="hint">100% local · no server · no tracking · no ads</div>
 </div>
 
 <div id="app">
@@ -352,20 +344,22 @@ let DATA,bills=[],delegates=[],senators=[],smap={},pidx={};
 let bpage=1,fbills=[];
 const PG=50;
 
-// ── BOOT ──
+// ── BOOT — auto-fetch data file ──
 document.getElementById('hdr-date').textContent=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-document.getElementById('finput').addEventListener('change',e=>load(e.target.files[0]));
-const dz=document.getElementById('dz');
-dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over');});
-dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
-dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');load(e.dataTransfer.files[0]);});
 
-function load(file){
-  if(!file)return;
-  const r=new FileReader();
-  r.onload=e=>{try{DATA=JSON.parse(e.target.result);init();}catch{alert('Could not parse wv_data_full.json');}};
-  r.readAsText(file);
+async function autoLoad(){
+  try{
+    const res=await fetch('wv_data_full.json');
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    DATA=await res.json();
+    init();
+  }catch(e){
+    console.error('Failed to load wv_data_full.json:',e);
+    document.querySelector('.spinner').style.display='none';
+    document.getElementById('err-box').style.display='block';
+  }
 }
+autoLoad();
 
 // ── INIT ──
 function init(){
