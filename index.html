@@ -6,258 +6,308 @@
 <title>West Virginia Legislative Accountability Project — 2026 Session</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --ink:#111010; --paper:#f7f3ec; --paper2:#eee8d8; --paper3:#e5deca;
-  --red:#b5291c; --red2:#8c1e13; --gold:#b8962e; --green:#1e6640; --blue:#1a3f7a;
-  --muted:#6b6455; --border:#cdc6b4; --border2:#b8b0a0;
+:root{
+  --ink:#111010;--paper:#f7f3ec;--paper2:#eee8d8;--paper3:#e5deca;
+  --red:#b5291c;--red2:#8c1e13;--gold:#b8962e;--green:#1e6640;--blue:#1a3f7a;
+  --muted:#6b6455;--border:#cdc6b4;--border2:#b8b0a0;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{font-family:'IBM Plex Sans',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh;}
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:0.35;}
+body::before{content:'';position:fixed;inset:0;opacity:0.3;pointer-events:none;z-index:9999;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");}
 
-/* MASTHEAD */
-.masthead{background:var(--ink);color:var(--paper);position:fixed;top:0;left:0;right:0;z-index:200;box-shadow:0 3px 12px rgba(0,0,0,0.35);}
-.mast-flag{display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid rgba(255,255,255,0.08);}
-.mf-side{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;letter-spacing:0.14em;color:rgba(255,255,255,0.38);text-transform:uppercase;padding:8px 0;min-width:160px;}
-.mf-side.right{text-align:right;}
-.mf-center{text-align:center;padding:10px 20px 8px;flex:1;}
-.mf-center h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,3.8vw,2.8rem);letter-spacing:0.08em;line-height:1;color:#fff;}
-.mf-center .sub{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.18em;color:rgba(255,255,255,0.35);text-transform:uppercase;margin-top:2px;}
-.mast-nav{display:flex;justify-content:center;}
-.tab-btn{font-family:'IBM Plex Mono',monospace;font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase;padding:11px 26px;background:none;border:none;border-right:1px solid rgba(255,255,255,0.07);cursor:pointer;color:rgba(255,255,255,0.42);transition:all .18s;}
-.tab-btn:first-child{border-left:1px solid rgba(255,255,255,0.07);}
-.tab-btn:hover{color:#fff;background:rgba(255,255,255,0.06);}
-.tab-btn.active{color:#fff;background:var(--red);border-color:var(--red2);}
-/* push page content below fixed header (header ~130px + ticker ~28px) */
-#app,#loader{padding-top:158px;}
-
-/* TICKER — inside fixed header */
-.ticker{background:var(--red);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.05em;padding:5px 0;overflow:hidden;white-space:nowrap;}
-.ticker-inner{display:inline-block;}
+/* ── HEADER ── */
+.hdr{background:var(--ink);position:fixed;top:0;left:0;right:0;z-index:300;box-shadow:0 2px 10px rgba(0,0,0,0.4);}
+.hdr-flag{display:flex;align-items:center;padding:0 24px;border-bottom:1px solid rgba(255,255,255,0.08);}
+.hdr-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,3.5vw,2.4rem);letter-spacing:0.07em;color:#fff;padding:12px 0 10px;flex:1;text-align:center;}
+.hdr-date{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;color:rgba(255,255,255,0.35);text-transform:uppercase;min-width:130px;text-align:right;}
+.hdr-nav{display:flex;justify-content:center;border-top:1px solid rgba(255,255,255,0.07);}
+.nav-btn{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;padding:10px 22px;background:none;border:none;border-right:1px solid rgba(255,255,255,0.07);cursor:pointer;color:rgba(255,255,255,0.4);transition:all .15s;}
+.nav-btn:first-child{border-left:1px solid rgba(255,255,255,0.07);}
+.nav-btn:hover{color:#fff;background:rgba(255,255,255,0.06);}
+.nav-btn.on{color:#fff;background:var(--red);}
+.ticker{background:var(--red);overflow:hidden;white-space:nowrap;padding:4px 0;}
+.ticker-inner{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:0.58rem;letter-spacing:0.04em;color:#fff;}
 @keyframes tickScroll{from{transform:translateX(100vw);}to{transform:translateX(-100%);}}
 
-/* LOADER */
-#loader{max-width:480px;margin:100px auto;padding:48px;text-align:center;background:var(--paper);border:2px solid var(--ink);box-shadow:8px 8px 0 var(--ink);animation:fadeUp .35s ease;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
-#loader h2{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.06em;margin-bottom:10px;}
-#loader p{color:var(--muted);font-size:0.84rem;line-height:1.6;}
-.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;margin:24px auto 16px;}
+/* ── LOADER ── */
+#loader{max-width:460px;margin:0 auto;padding-top:160px;text-align:center;}
+.loader-box{border:2px solid var(--ink);box-shadow:7px 7px 0 var(--ink);padding:44px;background:var(--paper);}
+.loader-box h2{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:0.06em;margin-bottom:8px;}
+.loader-box p{color:var(--muted);font-size:0.84rem;line-height:1.6;}
+.spinner{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite;margin:22px auto 14px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.err-box{background:#fdf2f1;border:1px solid var(--red);padding:16px;margin-top:20px;font-size:0.82rem;color:var(--red);display:none;}
+.err{background:#fdf2f1;border:1px solid var(--red);padding:14px;margin-top:18px;font-size:0.81rem;color:var(--red);display:none;line-height:1.5;}
 
-/* APP */
-#app{display:none;}
+/* ── APP ── */
+#app{display:none;padding-top:130px;}
+.wrap{max-width:1400px;margin:0 auto;padding:0 22px;}
+.tab{display:none;padding:28px 0 64px;}
+.tab.on{display:block;}
+.sec{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:14px;}
 
-/* STATS BAR */
+/* ── STATS BAR ── */
 .sbar{display:grid;grid-template-columns:repeat(5,1fr);background:var(--paper2);border-bottom:2px solid var(--ink);}
-.scell{padding:13px 14px;border-right:1px solid var(--border);text-align:center;}
-.scell:last-child{border-right:none;}
-.snum{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:0.04em;line-height:1;}
-.snum.r{color:var(--red);} .snum.g{color:var(--green);} .snum.b{color:var(--blue);}
-.slbl{font-family:'IBM Plex Mono',monospace;font-size:0.53rem;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+.sc{padding:12px 14px;border-right:1px solid var(--border);text-align:center;}
+.sc:last-child{border-right:none;}
+.sn{font-family:'Bebas Neue',sans-serif;font-size:1.85rem;letter-spacing:0.04em;line-height:1;}
+.sn.r{color:var(--red);}.sn.g{color:var(--green);}.sn.b{color:var(--blue);}
+.sl{font-family:'IBM Plex Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
 
-/* LAYOUT */
-.wrap{max-width:1480px;margin:0 auto;padding:0 24px;}
-.tab-pane{display:none;padding:30px 0 64px;}
-.tab-pane.active{display:block;}
-.sec{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);padding-bottom:7px;margin-bottom:14px;}
+/* ── FIND YOUR REP (hero) ── */
+.hero{background:var(--ink);color:#fff;padding:40px 22px;margin-bottom:0;text-align:center;}
+.hero h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,4vw,3rem);letter-spacing:0.06em;margin-bottom:8px;}
+.hero p{font-size:0.88rem;color:rgba(255,255,255,0.55);margin-bottom:24px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.6;}
+.county-select{width:100%;max-width:420px;padding:14px 18px;font-family:'IBM Plex Mono',monospace;font-size:0.85rem;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#fff;outline:none;cursor:pointer;transition:border-color .15s;margin-bottom:8px;}
+.county-select:focus{border-color:var(--red);}
+.county-select option{background:var(--ink);color:#fff;}
 
-/* OVERVIEW */
-.ov-grid{display:grid;grid-template-columns:1fr 330px;gap:30px;margin-bottom:32px;}
-.p-bar{display:flex;height:36px;border:1px solid var(--border2);overflow:hidden;margin-bottom:5px;}
+/* ── REP RESULT CARDS ── */
+.rep-results{max-width:900px;margin:0 auto;padding:28px 22px 0;}
+.rep-card{border:2px solid var(--ink);background:var(--paper);box-shadow:5px 5px 0 var(--ink);margin-bottom:20px;overflow:hidden;}
+.rep-card-hd{display:flex;gap:16px;align-items:flex-start;padding:20px 22px;border-bottom:2px solid var(--ink);background:var(--paper2);}
+.rep-photo{width:72px;height:72px;border-radius:4px;object-fit:cover;border:2px solid var(--border2);flex-shrink:0;background:var(--paper3);}
+.rep-photo-init{width:72px;height:72px;border-radius:4px;border:2px solid var(--border2);background:var(--paper3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--muted);}
+.rep-hd-info{flex:1;}
+.rep-role{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.rep-name{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:0.05em;line-height:1;margin-bottom:4px;}
+.rep-party{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;font-weight:500;}
+.pR{color:var(--red);}.pD{color:var(--blue);}
+.rep-contact{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;}
+.con-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border:1px solid var(--border2);font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--ink);text-decoration:none;transition:all .12s;}
+.con-chip:hover{background:var(--ink);color:#fff;}
+
+/* ── FACT SUMMARY ── */
+.fact-summary{padding:16px 22px;border-bottom:1px solid var(--border);font-size:0.86rem;line-height:1.75;background:var(--paper);}
+.fact-summary strong{color:var(--ink);}
+.fact-tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.08em;text-transform:uppercase;padding:2px 7px;margin-right:4px;vertical-align:middle;}
+.ft-att{background:#d1e8d8;color:#1a5c2f;}
+.ft-att-warn{background:#fdefc3;color:#7a5a0a;}
+.ft-att-bad{background:#f5d5d2;color:#7a1e16;}
+.ft-party{background:#e4e4e4;color:#444;}
+
+/* ── REP BILLS ── */
+.rep-bills{padding:16px 22px;}
+.rbill-row{display:flex;align-items:baseline;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:all .12s;}
+.rbill-row:hover{background:var(--paper2);padding-left:6px;}
+.rbill-num{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--red);flex-shrink:0;width:68px;}
+.rbill-title{font-size:0.83rem;flex:1;line-height:1.3;}
+.no-rep{text-align:center;padding:32px;color:var(--muted);font-size:0.86rem;}
+
+/* ── OVERVIEW ── */
+.ov-grid{display:grid;grid-template-columns:1fr 320px;gap:28px;margin-bottom:28px;}
+.p-bar{display:flex;height:34px;border:1px solid var(--border2);overflow:hidden;margin-bottom:5px;}
 .p-R{background:var(--red);display:flex;align-items:center;justify-content:center;}
 .p-D{background:var(--blue);display:flex;align-items:center;justify-content:center;}
-.p-lbl{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.04em;color:#fff;}
-.p-sub{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--muted);margin-bottom:20px;}
-
-.sp-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
+.p-lbl{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:#fff;}
+.p-sub{font-family:'IBM Plex Mono',monospace;font-size:0.57rem;color:var(--muted);margin-bottom:18px;}
+.sp-row{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
 .sp-row:hover{background:var(--paper2);}
-.sp-rank{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;color:var(--border2);width:22px;flex-shrink:0;text-align:center;}
-.sp-photo{width:34px;height:34px;border-radius:50%;border:2px solid var(--border);object-fit:cover;flex-shrink:0;background:var(--paper3);}
-.sp-photo-init{width:34px;height:34px;border-radius:50%;border:2px solid var(--border);background:var(--paper3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:0.9rem;color:var(--muted);}
-.sp-name{font-family:'Libre Baskerville',serif;font-size:0.86rem;font-weight:700;flex:1;}
-.sp-party{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;}
-.sp-cnt{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;color:var(--red);flex-shrink:0;}
-
-.gc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
-.gc{border:1px solid var(--border);padding:13px;text-align:center;background:var(--paper);}
-.gc-n{font-family:'Bebas Neue',sans-serif;font-size:1.55rem;letter-spacing:0.04em;line-height:1;}
-.gc-l{font-family:'IBM Plex Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+.sp-rank{font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--border2);width:20px;text-align:center;flex-shrink:0;}
+.sp-photo{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);object-fit:cover;flex-shrink:0;background:var(--paper3);}
+.sp-init{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);background:var(--paper3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:0.85rem;color:var(--muted);}
+.sp-name{font-family:'Libre Baskerville',serif;font-size:0.84rem;font-weight:700;flex:1;}
+.sp-cnt{font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--red);flex-shrink:0;}
+.gc-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px;}
+.gc{border:1px solid var(--border);padding:12px;text-align:center;background:var(--paper);}
+.gcn{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.04em;line-height:1;}
+.gcl{font-family:'IBM Plex Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
 .stat-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);}
-.stat-row-l{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;}
-.stat-row-v{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:0.04em;}
-
-.spot-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
-.spot-card{border:1px solid var(--border);padding:17px;background:var(--paper);cursor:pointer;transition:all .15s;position:relative;overflow:hidden;}
-.spot-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
-.spot-card.c0::before{background:var(--green);} .spot-card.c1::before{background:var(--red);}
-.spot-card.c2::before{background:var(--gold);} .spot-card.c3::before{background:var(--blue);}
-.spot-card:hover{border-color:var(--ink);box-shadow:3px 3px 0 var(--ink);transform:translate(-1px,-1px);}
-.sp-tag{font-family:'IBM Plex Mono',monospace;font-size:0.52rem;letter-spacing:0.14em;text-transform:uppercase;padding:2px 6px;margin-bottom:8px;display:inline-block;color:#fff;}
-.sp-tag.t0{background:var(--green);} .sp-tag.t1{background:var(--red);}
-.sp-tag.t2{background:var(--gold);} .sp-tag.t3{background:var(--blue);}
-.sp-bnum{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--muted);margin-bottom:3px;}
-.sp-btitle{font-family:'Libre Baskerville',serif;font-size:0.86rem;font-weight:700;line-height:1.3;margin-bottom:5px;}
-.sp-bdesc{font-size:0.76rem;color:var(--muted);line-height:1.4;}
-
-.feed-row{display:flex;align-items:baseline;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:all .12s;}
+.sr-l{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
+.sr-v{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.04em;}
+.spot-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:28px;}
+.spot{border:1px solid var(--border);padding:15px;background:var(--paper);cursor:pointer;transition:all .14s;position:relative;overflow:hidden;}
+.spot::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.spot.c0::before{background:var(--green);}.spot.c1::before{background:var(--red);}
+.spot.c2::before{background:var(--gold);}.spot.c3::before{background:var(--blue);}
+.spot:hover{border-color:var(--ink);box-shadow:3px 3px 0 var(--ink);transform:translate(-1px,-1px);}
+.spot-tag{font-family:'IBM Plex Mono',monospace;font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;padding:2px 6px;color:#fff;display:inline-block;margin-bottom:7px;}
+.st0{background:var(--green);}.st1{background:var(--red);}.st2{background:var(--gold);}.st3{background:var(--blue);}
+.spot-num{font-family:'IBM Plex Mono',monospace;font-size:0.66rem;color:var(--muted);margin-bottom:2px;}
+.spot-title{font-family:'Libre Baskerville',serif;font-size:0.84rem;font-weight:700;line-height:1.3;margin-bottom:4px;}
+.spot-desc{font-size:0.74rem;color:var(--muted);line-height:1.4;}
+.feed-row{display:flex;align-items:baseline;gap:12px;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:all .12s;}
 .feed-row:hover{background:var(--paper2);padding-left:6px;}
-.feed-num{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--red);flex-shrink:0;width:72px;}
-.feed-title{font-size:0.82rem;flex:1;line-height:1.3;}
-.feed-date{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--muted);flex-shrink:0;}
+.feed-num{font-family:'IBM Plex Mono',monospace;font-size:0.66rem;color:var(--red);flex-shrink:0;width:70px;}
+.feed-title{font-size:0.81rem;flex:1;line-height:1.3;}
+.feed-date{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);flex-shrink:0;}
 
-/* BILLS */
-.toolbar{display:flex;gap:9px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
-.sbox{flex:1;min-width:200px;padding:8px 12px;border:1px solid var(--border2);background:var(--paper);font-family:'IBM Plex Sans',sans-serif;font-size:0.83rem;color:var(--ink);outline:none;transition:border-color .14s;}
+/* ── BILLS TAB ── */
+.toolbar{display:flex;gap:8px;margin-bottom:13px;flex-wrap:wrap;align-items:center;}
+.sbox{flex:1;min-width:200px;padding:8px 12px;border:1px solid var(--border2);background:var(--paper);font-family:'IBM Plex Sans',sans-serif;font-size:0.82rem;color:var(--ink);outline:none;}
 .sbox:focus{border-color:var(--ink);}
-.fsel{padding:8px 12px;border:1px solid var(--border2);background:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:0.63rem;letter-spacing:0.04em;color:var(--ink);outline:none;cursor:pointer;}
-.rcount{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);margin-bottom:9px;letter-spacing:0.04em;}
+.fsel{padding:8px 12px;border:1px solid var(--border2);background:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--ink);outline:none;cursor:pointer;}
+.rcount{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);margin-bottom:8px;}
 .btable{width:100%;border-collapse:collapse;font-size:0.81rem;}
-.btable th{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--ink);padding:8px 10px;text-align:left;background:var(--paper2);white-space:nowrap;}
+.btable th{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--ink);padding:8px 10px;text-align:left;background:var(--paper2);white-space:nowrap;}
 .btable td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
 .btable tr:hover td{background:var(--paper2);cursor:pointer;}
-.bnum{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--red);white-space:nowrap;font-weight:500;}
-.btitle{max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bnum{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--red);white-space:nowrap;}
+.btitle{max-width:380px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .badge{display:inline-block;padding:2px 6px;font-family:'IBM Plex Mono',monospace;font-size:0.52rem;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;}
-.bp{background:#d1e8d8;color:#1a5c2f;} .be{background:#d0e4f5;color:#1a3f7a;}
-.bf{background:#f5d5d2;color:#7a1e16;} .bc{background:#fdefc3;color:#7a5a0a;} .bi{background:#e4e4e4;color:#444;}
-.pager{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:12px;border-top:1px solid var(--border);}
-.pager-info{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);}
-.pager-btns{display:flex;gap:4px;}
+.bp{background:#d1e8d8;color:#1a5c2f;}.be{background:#d0e4f5;color:#1a3f7a;}
+.bf{background:#f5d5d2;color:#7a1e16;}.bc{background:#fdefc3;color:#7a5a0a;}.bi{background:#e4e4e4;color:#444;}
+.pager{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
+.pi{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);}
+.pbtns{display:flex;gap:3px;}
 .pbtn{padding:5px 10px;border:1px solid var(--border2);background:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:0.6rem;cursor:pointer;color:var(--ink);transition:all .12s;}
 .pbtn:hover,.pbtn.on{background:var(--ink);color:var(--paper);border-color:var(--ink);}
-.pbtn:disabled{opacity:0.32;cursor:not-allowed;}
+.pbtn:disabled{opacity:0.3;cursor:not-allowed;}
 
-/* DELEGATES */
-.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:13px;}
-.dcard{border:1px solid var(--border);background:var(--paper);cursor:pointer;transition:all .15s;overflow:hidden;}
+/* ── LEGISLATORS GRID ── */
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:12px;}
+.dcard{border:1px solid var(--border);background:var(--paper);cursor:pointer;transition:all .14s;overflow:hidden;}
 .dcard:hover{border-color:var(--ink);box-shadow:4px 4px 0 var(--ink);transform:translate(-2px,-2px);}
-.dtop{display:flex;gap:12px;align-items:flex-start;padding:15px 15px 11px;}
-.dphoto{width:56px;height:56px;border-radius:4px;object-fit:cover;border:2px solid var(--border);background:var(--paper3);flex-shrink:0;}
-.dinit{width:56px;height:56px;border-radius:4px;border:2px solid var(--border);background:var(--paper3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.35rem;color:var(--muted);}
-.dinfo{flex:1;min-width:0;}
-.dname{font-family:'Libre Baskerville',serif;font-size:0.93rem;font-weight:700;line-height:1.2;margin-bottom:3px;}
-.dmeta{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.04em;color:var(--muted);line-height:1.65;}
-.pR{color:var(--red);font-weight:600;} .pD{color:var(--blue);font-weight:600;}
-.dbar-wrap{padding:0 15px;}
-.dbar{height:3px;background:var(--border);}
-.dbar-fill{height:100%;transition:width .3s;}
-.dstats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--border);}
-.ds{padding:9px 6px;text-align:center;border-right:1px solid var(--border);}
+.dc-top{display:flex;gap:11px;align-items:flex-start;padding:14px 14px 10px;}
+.dc-photo{width:52px;height:52px;border-radius:4px;object-fit:cover;border:2px solid var(--border);background:var(--paper3);flex-shrink:0;}
+.dc-init{width:52px;height:52px;border-radius:4px;border:2px solid var(--border);background:var(--paper3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.25rem;color:var(--muted);}
+.dc-info{flex:1;min-width:0;}
+.dc-name{font-family:'Libre Baskerville',serif;font-size:0.9rem;font-weight:700;line-height:1.2;margin-bottom:2px;}
+.dc-meta{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.04em;color:var(--muted);line-height:1.6;}
+.dc-stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--border);}
+.ds{padding:8px 5px;text-align:center;border-right:1px solid var(--border);}
 .ds:last-child{border-right:none;}
-.dsn{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:0.04em;line-height:1;}
-.dsl{font-family:'IBM Plex Mono',monospace;font-size:0.49rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+.dsn{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:0.04em;line-height:1;}
+.dsl{font-family:'IBM Plex Mono',monospace;font-size:0.48rem;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+.att-bar{height:3px;background:var(--border);margin:0 14px;}
+.att-fill{height:100%;}
 
-/* MODAL */
-.mwrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;overflow-y:auto;padding:40px 16px;backdrop-filter:blur(2px);}
+/* ── MODAL ── */
+.mwrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;overflow-y:auto;padding:36px 16px;backdrop-filter:blur(2px);}
 .mwrap.open{display:flex;align-items:flex-start;justify-content:center;}
-.modal{background:var(--paper);max-width:760px;width:100%;border:2px solid var(--ink);box-shadow:10px 10px 0 var(--ink);animation:popIn .2s ease;}
-@keyframes popIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
-.mhd{padding:20px 26px;border-bottom:2px solid var(--ink);display:flex;gap:14px;align-items:flex-start;}
-.mhd-photo{width:70px;height:70px;border-radius:4px;object-fit:cover;border:2px solid var(--border2);flex-shrink:0;}
+.modal{background:var(--paper);max-width:780px;width:100%;border:2px solid var(--ink);box-shadow:10px 10px 0 var(--ink);animation:popIn .18s ease;}
+@keyframes popIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+.mhd{padding:18px 24px;border-bottom:2px solid var(--ink);display:flex;gap:14px;align-items:flex-start;}
+.mhd-photo{width:66px;height:66px;border-radius:4px;object-fit:cover;border:2px solid var(--border2);flex-shrink:0;}
 .mhd-info{flex:1;}
-.m-kicker{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
-.m-title{font-family:'Bebas Neue',sans-serif;font-size:1.75rem;letter-spacing:0.06em;line-height:1.1;}
-.m-sub{font-size:0.78rem;color:var(--muted);margin-top:3px;}
-.mclose{background:none;border:none;font-size:1.25rem;cursor:pointer;color:var(--muted);padding:0;line-height:1;margin-left:auto;flex-shrink:0;}
+.m-kick{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.m-title{font-family:'Bebas Neue',sans-serif;font-size:1.65rem;letter-spacing:0.05em;line-height:1.1;}
+.m-sub{font-size:0.77rem;color:var(--muted);margin-top:3px;}
+.mclose{background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--muted);line-height:1;flex-shrink:0;}
 .mclose:hover{color:var(--ink);}
-.mbd{padding:22px 26px;}
-.mbd h3{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);padding-bottom:5px;margin:18px 0 10px;}
+.mbd{padding:20px 24px;}
+.mbd h3{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);padding-bottom:5px;margin:16px 0 9px;}
 .mbd h3:first-child{margin-top:0;}
-.score-wrap{display:flex;gap:10px;margin-bottom:4px;}
-.sbox2{flex:1;border:1px solid var(--border);padding:13px 8px;text-align:center;}
-.sbox2 .sn{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:0.04em;line-height:1;}
-.sbox2 .sl{font-family:'IBM Plex Mono',monospace;font-size:0.5rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
-.mini-list{list-style:none;}
-.mini-item{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.81rem;align-items:baseline;}
-.mini-item:last-child{border-bottom:none;}
-.mini-num{font-family:'IBM Plex Mono',monospace;font-size:0.66rem;color:var(--red);flex-shrink:0;width:66px;}
-.chip-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:6px;}
-.chip{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--ink);text-decoration:none;transition:all .12s;cursor:pointer;}
-.chip:hover{background:var(--ink);color:var(--paper);}
+.fact-box{padding:13px 16px;background:var(--paper2);border:1px solid var(--border);border-left:3px solid var(--ink);font-size:0.84rem;line-height:1.75;margin-bottom:4px;}
+.srow{display:flex;gap:9px;margin-bottom:4px;}
+.sbox{flex:1;border:1px solid var(--border);padding:12px 8px;text-align:center;}
+.sbox .sn2{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.04em;line-height:1;}
+.sbox .sl2{font-family:'IBM Plex Mono',monospace;font-size:0.49rem;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+.chip-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px;}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:5px 9px;border:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--ink);text-decoration:none;transition:all .12s;cursor:pointer;}
+.chip:hover{background:var(--ink);color:#fff;}
 .soc-links{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;}
-.soc-link{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.05em;padding:4px 8px;border:1px solid var(--border);color:var(--muted);text-decoration:none;transition:all .12s;}
-.soc-link:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+.soc-link{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;padding:4px 7px;border:1px solid var(--border);color:var(--muted);text-decoration:none;transition:all .12s;}
+.soc-link:hover{background:var(--ink);color:#fff;}
+.mini-list{list-style:none;}
+.mini-item{display:flex;gap:9px;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.8rem;align-items:baseline;}
+.mini-item:last-child{border-bottom:none;}
+.mini-num{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--red);flex-shrink:0;width:64px;}
 .vbar-wrap{margin:5px 0;}
-.vbar-lbl{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--muted);margin-bottom:3px;display:flex;justify-content:space-between;}
+.vbar-lbl{font-family:'IBM Plex Mono',monospace;font-size:0.57rem;color:var(--muted);margin-bottom:3px;display:flex;justify-content:space-between;}
 .vbar{height:5px;background:var(--border);border-radius:2px;overflow:hidden;}
 .vbar-y{height:100%;background:var(--green);border-radius:2px;}
 
-/* HALL OF SHAME / FAME */
-.hall-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:32px;}
-.hall-section{}
-.hall-card{
-  border:1px solid var(--border);
-  background:var(--paper);
-  margin-bottom:12px;
-  cursor:pointer;
-  transition:all .15s;
-  overflow:hidden;
-  position:relative;
+/* roll call grid */
+.rc-section{margin-bottom:16px;}
+.rc-label{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;}
+.rc-grid{display:flex;flex-wrap:wrap;gap:5px;}
+.rc-chip{display:flex;align-items:center;gap:4px;padding:3px 8px 3px 4px;border-radius:2px;cursor:pointer;font-size:0.72rem;transition:opacity .12s;}
+.rc-chip:hover{opacity:0.75;}
+.rc-chip img{width:18px;height:18px;border-radius:50%;object-fit:cover;flex-shrink:0;}
+.rc-chip .rc-init{width:18px;height:18px;border-radius:50%;background:var(--paper3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:0.55rem;color:var(--muted);}
+
+@media(max-width:900px){
+  .sbar{grid-template-columns:repeat(3,1fr);}
+  .ov-grid{grid-template-columns:1fr;}
+  .spot-grid{grid-template-columns:1fr 1fr;}
+  .dgrid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));}
+  .nav-btn{padding:10px 12px;font-size:0.56rem;}
 }
-.hall-card:hover{border-color:var(--ink);box-shadow:3px 3px 0 var(--ink);transform:translate(-1px,-1px);}
-.hall-card.shame{border-left:4px solid var(--red);}
-.hall-card.fame{border-left:4px solid var(--green);}
-.hall-card-inner{display:flex;gap:12px;padding:14px 16px;align-items:flex-start;}
-.hall-photo{width:48px;height:48px;border-radius:3px;object-fit:cover;border:1px solid var(--border);flex-shrink:0;background:var(--paper3);}
-.hall-photo-init{width:48px;height:48px;border-radius:3px;border:1px solid var(--border);background:var(--paper3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--muted);}
-.hall-info{flex:1;min-width:0;}
-.hall-bnum{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--muted);margin-bottom:2px;}
-.hall-btitle{font-family:'Libre Baskerville',serif;font-size:0.88rem;font-weight:700;line-height:1.3;margin-bottom:5px;}
-.hall-bdesc{font-size:0.76rem;color:var(--muted);line-height:1.4;margin-bottom:6px;}
-.hall-sponsor{display:flex;align-items:center;gap:7px;padding-top:6px;border-top:1px solid var(--border);}
-.hall-sponsor-photo{width:24px;height:24px;border-radius:50%;object-fit:cover;border:1px solid var(--border);flex-shrink:0;}
-.hall-sponsor-name{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--ink);}
-.hall-tag{font-family:'IBM Plex Mono',monospace;font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;padding:2px 6px;display:inline-block;margin-bottom:4px;}
-.hall-tag.shame{background:var(--red);color:#fff;}
-.hall-tag.fame{background:var(--green);color:#fff;}
-.hall-empty{color:var(--muted);font-size:0.84rem;padding:20px 0;font-style:italic;}
-@media(max-width:900px){.sbar{grid-template-columns:repeat(3,1fr);}.ov-grid{grid-template-columns:1fr;}.spot-grid{grid-template-columns:1fr 1fr;}.dgrid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));}.tab-btn{padding:10px 13px;font-size:0.56rem;}.hall-grid{grid-template-columns:1fr;}}
-@media(max-width:600px){.sbar{grid-template-columns:repeat(2,1fr);}.spot-grid{grid-template-columns:1fr;}.score-wrap{flex-wrap:wrap;}.mf-side{display:none;}}
+@media(max-width:600px){
+  .sbar{grid-template-columns:repeat(2,1fr);}
+  .spot-grid{grid-template-columns:1fr;}
+  .srow{flex-wrap:wrap;}
+  .hdr-date{display:none;}
+}
 </style>
 </head>
 <body>
 
-<div class="masthead">
-  <div class="mast-flag">
-    <div class="mf-side">Est. 2026 · Public Record</div>
-    <div class="mf-center">
-      <h1>WEST VIRGINIA LEGISLATIVE ACCOUNTABILITY PROJECT</h1>
-      <div class="sub">2026 Regular Session · West Virginia Legislature · Jan 14 – Mar 14</div>
-    </div>
-    <div class="mf-side right" id="hdr-date"></div>
+<!-- FIXED HEADER -->
+<div class="hdr">
+  <div class="hdr-flag">
+    <div style="min-width:130px;font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;color:rgba(255,255,255,0.35);text-transform:uppercase;">Est. 2026 · Public Record</div>
+    <div class="hdr-title">West Virginia Legislative Accountability Project</div>
+    <div class="hdr-date" id="hdr-date"></div>
   </div>
-  <div class="mast-nav">
-    <button class="tab-btn active" onclick="showTab('overview',this)">Overview</button>
-    <button class="tab-btn" onclick="showTab('bills',this)">Bills &amp; Votes</button>
-    <button class="tab-btn" onclick="showTab('delegates',this)">House Delegates</button>
-    <button class="tab-btn" onclick="showTab('senate',this)">Senate</button>
+  <div class="hdr-nav">
+    <button class="nav-btn on"  onclick="showTab('find',this)">Find My Rep</button>
+    <button class="nav-btn" onclick="showTab('overview',this)">Session Overview</button>
+    <button class="nav-btn" onclick="showTab('bills',this)">All Bills</button>
+    <button class="nav-btn" onclick="showTab('delegates',this)">House Delegates</button>
+    <button class="nav-btn" onclick="showTab('senate',this)">Senate</button>
   </div>
-  <div class="ticker"><span class="ticker-inner" id="ticker">Loading session data…</span></div>
+  <div class="ticker"><span class="ticker-inner" id="ticker">Loading…</span></div>
 </div>
 
+<!-- LOADER -->
 <div id="loader">
-  <h2>WV Legislative Accountability Project</h2>
-  <p>Loading 2026 session data…</p>
-  <div class="spinner"></div>
-  <div class="err-box" id="err-box">
-    ⚠ Could not load session data. Make sure <strong>wv_data_full.json</strong> is uploaded to the same GitHub repository as this file.
+  <div class="loader-box">
+    <h2>Loading Data</h2>
+    <p>Fetching 2026 West Virginia legislative session data…</p>
+    <div class="spinner"></div>
+    <div class="err" id="err">⚠ Could not load session data. Make sure <strong>wv_data_votes.json</strong> is in the same folder as this file on GitHub.</div>
   </div>
 </div>
 
+<!-- APP -->
 <div id="app">
   <div class="sbar">
-    <div class="scell"><div class="snum" id="s1">–</div><div class="slbl">Bills Introduced</div></div>
-    <div class="scell"><div class="snum g" id="s2">–</div><div class="slbl">Passed / Enrolled</div></div>
-    <div class="scell"><div class="snum r" id="s3">–</div><div class="slbl">Passage Rate</div></div>
-    <div class="scell"><div class="snum b" id="s4">–</div><div class="slbl">House Delegates</div></div>
-    <div class="scell"><div class="snum" id="s5">–</div><div class="slbl">Senators</div></div>
+    <div class="sc"><div class="sn" id="s1">–</div><div class="sl">Bills Introduced</div></div>
+    <div class="sc"><div class="sn g" id="s2">–</div><div class="sl">Passed / Enrolled</div></div>
+    <div class="sc"><div class="sn r" id="s3">–</div><div class="sl">Passage Rate</div></div>
+    <div class="sc"><div class="sn b" id="s4">–</div><div class="sl">House Delegates</div></div>
+    <div class="sc"><div class="sn" id="s5">–</div><div class="sl">Senators</div></div>
   </div>
 
   <div class="wrap">
-    <!-- OVERVIEW -->
-    <div class="tab-pane active" id="tab-overview">
+
+    <!-- FIND MY REP -->
+    <div class="tab on" id="tab-find">
+      <div class="hero">
+        <h2>Who Represents You?</h2>
+        <p>Select your county below to see your House Delegate and State Senator — their record, their votes, and how to reach them.</p>
+        <select class="county-select" id="county-select" onchange="findRep()">
+          <option value="">— Select your county —</option>
+          <option>Barbour</option><option>Berkeley</option><option>Boone</option>
+          <option>Braxton</option><option>Brooke</option><option>Cabell</option>
+          <option>Calhoun</option><option>Clay</option><option>Doddridge</option>
+          <option>Fayette</option><option>Gilmer</option><option>Grant</option>
+          <option>Greenbrier</option><option>Hampshire</option><option>Hancock</option>
+          <option>Hardy</option><option>Harrison</option><option>Jackson</option>
+          <option>Jefferson</option><option>Kanawha</option><option>Lewis</option>
+          <option>Lincoln</option><option>Logan</option><option>Marion</option>
+          <option>Marshall</option><option>Mason</option><option>McDowell</option>
+          <option>Mercer</option><option>Mineral</option><option>Mingo</option>
+          <option>Monongalia</option><option>Monroe</option><option>Morgan</option>
+          <option>Nicholas</option><option>Ohio</option><option>Pendleton</option>
+          <option>Pleasants</option><option>Pocahontas</option><option>Preston</option>
+          <option>Putnam</option><option>Raleigh</option><option>Randolph</option>
+          <option>Ritchie</option><option>Roane</option><option>Summers</option>
+          <option>Taylor</option><option>Tucker</option><option>Tyler</option>
+          <option>Upshur</option><option>Wayne</option><option>Webster</option>
+          <option>Wetzel</option><option>Wirt</option><option>Wood</option>
+          <option>Wyoming</option>
+        </select>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:rgba(255,255,255,0.3);margin-top:6px;">Most counties have multiple delegates — all will be shown</div>
+      </div>
+      <div id="rep-results" class="rep-results"></div>
+    </div>
+
+    <!-- SESSION OVERVIEW -->
+    <div class="tab" id="tab-overview">
       <div class="ov-grid">
         <div>
           <div class="sec">Legislative Composition — All Chambers</div>
@@ -279,8 +329,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div id="feed"></div>
     </div>
 
-    <!-- BILLS -->
-    <div class="tab-pane" id="tab-bills">
+    <!-- ALL BILLS -->
+    <div class="tab" id="tab-bills">
       <div class="toolbar">
         <input class="sbox" id="bsearch" placeholder="Search bill number or title…" oninput="renderBills()">
         <select class="fsel" id="fstat" onchange="renderBills()">
@@ -310,8 +360,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div class="pager" id="bpager"></div>
     </div>
 
-    <!-- DELEGATES -->
-    <div class="tab-pane" id="tab-delegates">
+    <!-- HOUSE DELEGATES -->
+    <div class="tab" id="tab-delegates">
       <div class="toolbar">
         <input class="sbox" id="dsearch" placeholder="Search name or district…" oninput="renderDels()">
         <select class="fsel" id="dparty" onchange="renderDels()">
@@ -322,14 +372,10 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         <select class="fsel" id="dsort" onchange="renderDels()">
           <option value="name">Name A–Z</option>
           <option value="district">District</option>
-          <option value="grade_hi">Best Grade</option>
-          <option value="grade_lo">Worst Grade</option>
           <option value="att_hi">Best Attendance</option>
           <option value="att_lo">Worst Attendance</option>
-          <option value="hi">Most Bills</option>
-          <option value="lo">Fewest Bills</option>
-          <option value="rhi">Highest Pass Rate</option>
-          <option value="rlo">Lowest Pass Rate</option>
+          <option value="bills_hi">Most Bills</option>
+          <option value="party_hi">Highest Party-Line %</option>
         </select>
       </div>
       <div class="rcount" id="dcnt"></div>
@@ -337,7 +383,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     </div>
 
     <!-- SENATE -->
-    <div class="tab-pane" id="tab-senate">
+    <div class="tab" id="tab-senate">
       <div class="toolbar">
         <input class="sbox" id="ssearch" placeholder="Search senator…" oninput="renderSens()">
         <select class="fsel" id="sparty" onchange="renderSens()">
@@ -348,12 +394,14 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         <select class="fsel" id="ssort" onchange="renderSens()">
           <option value="name">Name A–Z</option>
           <option value="district">District</option>
-          <option value="hi">Most Bills</option>
+          <option value="att_hi">Best Attendance</option>
+          <option value="att_lo">Worst Attendance</option>
         </select>
       </div>
       <div class="rcount" id="scnt"></div>
       <div class="dgrid" id="sgrid"></div>
     </div>
+
   </div>
 </div>
 
@@ -363,7 +411,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="mhd">
       <img class="mhd-photo" id="mph" src="" alt="" onerror="this.style.display='none'">
       <div class="mhd-info">
-        <div class="m-kicker" id="mkick"></div>
+        <div class="m-kick" id="mkick"></div>
         <div class="m-title" id="mtitle"></div>
         <div class="m-sub" id="msub"></div>
       </div>
@@ -374,193 +422,45 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 </div>
 
 <script>
-let DATA,bills=[],delegates=[],senators=[],smap={},pidx={},amap={};
+// ─────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────
+let DATA,bills=[],delegates=[],senators=[],smap={},pidx={},pstats={};
 let bpage=1,fbills=[];
 const PG=50;
 
-// ── SCORING SYSTEM ──────────────────────────────────────────
-// Grade weights (per user priority ranking):
-//   35% — Abstention rate on contested votes (avoiding tough votes = red flag)
-//   25% — Bill impact (substantive policy vs ceremonial)
-//   25% — Attendance (% of all votes showed up for)
-//   15% — Effectiveness (pass rate on sponsored bills that had a vote)
+// WV county → district mapping (simplified best-effort)
+// Each county maps to likely delegate districts for lookup
+const COUNTY_DISTRICTS={
+  'Barbour':['HD-058'],'Berkeley':['HD-065','HD-066','HD-067','HD-068','HD-069'],
+  'Boone':['HD-025','HD-026'],'Braxton':['HD-043'],'Brooke':['HD-003'],
+  'Cabell':['HD-016','HD-017','HD-018','HD-019','HD-020'],
+  'Calhoun':['HD-037'],'Clay':['HD-043'],'Doddridge':['HD-037'],
+  'Fayette':['HD-033','HD-034'],'Gilmer':['HD-037'],'Grant':['HD-059'],
+  'Greenbrier':['HD-035','HD-036'],'Hampshire':['HD-059'],'Hancock':['HD-001','HD-002'],
+  'Hardy':['HD-059'],'Harrison':['HD-050','HD-051','HD-052','HD-053'],
+  'Jackson':['HD-010'],'Jefferson':['HD-065','HD-066'],
+  'Kanawha':['HD-027','HD-028','HD-029','HD-030','HD-031','HD-032'],
+  'Lewis':['HD-042'],'Lincoln':['HD-021'],'Logan':['HD-022','HD-023'],
+  'Marion':['HD-047','HD-048','HD-049'],'Marshall':['HD-004','HD-005'],
+  'Mason':['HD-011'],'McDowell':['HD-014'],'Mercer':['HD-027','HD-028'],
+  'Mineral':['HD-060'],'Mingo':['HD-013'],'Monongalia':['HD-077','HD-078','HD-079','HD-080'],
+  'Monroe':['HD-036'],'Morgan':['HD-059'],'Nicholas':['HD-043'],
+  'Ohio':['HD-006','HD-007','HD-008'],'Pendleton':['HD-058'],
+  'Pleasants':['HD-009'],'Pocahontas':['HD-043'],'Preston':['HD-056','HD-057'],
+  'Putnam':['HD-012','HD-013'],'Raleigh':['HD-036','HD-037','HD-038','HD-039'],
+  'Randolph':['HD-057','HD-058'],'Ritchie':['HD-009'],'Roane':['HD-037'],
+  'Summers':['HD-035'],'Taylor':['HD-055'],'Tucker':['HD-057'],
+  'Tyler':['HD-009'],'Upshur':['HD-055'],'Wayne':['HD-015','HD-016'],
+  'Webster':['HD-043'],'Wetzel':['HD-004'],'Wirt':['HD-009'],
+  'Wood':['HD-009','HD-010','HD-011'],'Wyoming':['HD-026']
+};
 
-// Impactful bill subject keywords
-const IMPACT_KEYWORDS=[
-  'health','medicaid','medicare','insurance','hospital','mental','addiction','opioid',
-  'education','school','teacher','student','university','college',
-  'tax','budget','appropriat','revenue','fiscal','fund',
-  'environment','water','air','mine','coal','energy','utility',
-  'road','infrastructure','bridge','broadband','transpor',
-  'child','family','welfare','foster','juvenile','abuse',
-  'voting','election','ballot','campaign',
-  'crime','police','court','prison','sentenc','criminal',
-  'wage','employ','workforce','business','economic',
-  'pension','retirement','benefit','insurance',
-];
-
-function isBillImpactful(b){
-  const txt=(bT(b)+' '+bD(b)).toLowerCase();
-  return IMPACT_KEYWORDS.some(k=>txt.includes(k));
-}
-
-// A "contested" vote = at least 10% voted against the majority
-function isContested(rc){
-  const yea=(rc.votes||[]).filter(v=>v.vote_id===1).length;
-  const nay=(rc.votes||[]).filter(v=>v.vote_id===2).length;
-  const tot=yea+nay;
-  if(tot<5)return false;
-  const minority=Math.min(yea,nay);
-  return(minority/tot)>=0.10;
-}
-
-// Pre-compute per-person stats — called once after roll_calls loaded
-let pstats={}; // pid -> {attended,total,abstainedContested,totalContested,impactBills,passedImpact}
-function buildPstats(){
-  pstats={};
-  const allPids=Object.keys(pidx);
-  allPids.forEach(pid=>{
-    pstats[pid]={attended:0,total:0,abstainedContested:0,totalContested:0};
-  });
-
-  (DATA.roll_calls||[]).forEach(rc=>{
-    const contested=isContested(rc);
-    const votes=rc.votes||[];
-    // find all pids who appear in this roll call
-    votes.forEach(v=>{
-      const pid=v.people_id;
-      if(!pstats[pid])pstats[pid]={attended:0,total:0,abstainedContested:0,totalContested:0};
-      pstats[pid].total++;
-      if(v.vote_id===1||v.vote_id===2) pstats[pid].attended++;
-      if(contested){
-        pstats[pid].totalContested++;
-        // abstained = NV(3), Absent(4), Excused(5)
-        if(v.vote_id>=3) pstats[pid].abstainedContested++;
-      }
-    });
-  });
-
-  // bill impact stats
-  Object.keys(smap).forEach(pid=>{
-    const mb=smap[pid]||[];
-    const impactful=mb.filter(isBillImpactful);
-    const passedImpact=impactful.filter(isPassed).length;
-    if(!pstats[pid])pstats[pid]={attended:0,total:0,abstainedContested:0,totalContested:0};
-    pstats[pid].impactBills=impactful.length;
-    pstats[pid].passedImpact=passedImpact;
-    pstats[pid].totalBills=mb.length;
-    pstats[pid].passedBills=mb.filter(isPassed).length;
-  });
-}
-
-function attendancePct(pid){
-  const s=pstats[pid];
-  if(!s||!s.total)return null;
-  return Math.round(s.attended/s.total*100);
-}
-
-function abstentionPct(pid){
-  const s=pstats[pid];
-  if(!s||!s.totalContested)return null;
-  return Math.round(s.abstainedContested/s.totalContested*100);
-}
-
-function scorecard(pid){
-  const s=pstats[pid];
-  if(!s)return{grade:'?',score:null,color:'var(--muted)',summary:'No data available.'};
-
-  // 1. Contested vote participation (35%) — higher abstention = lower score
-  let abstScore=null;
-  if(s.totalContested>0){
-    const abstPct=s.abstainedContested/s.totalContested;
-    abstScore=Math.round((1-abstPct)*100);
-  }
-
-  // 2. Bill impact (25%) — ratio of impactful bills to total, weighted by pass rate
-  let impactScore=null;
-  const totalBills=s.totalBills||0;
-  const impactBills=s.impactBills||0;
-  if(totalBills>0){
-    const impactRatio=impactBills/totalBills;
-    const passBonus=impactBills>0?(s.passedImpact||0)/impactBills:0;
-    impactScore=Math.round((impactRatio*0.6+passBonus*0.4)*100);
-  }
-
-  // 3. Attendance (25%)
-  let attScore=null;
-  if(s.total>0) attScore=Math.round(s.attended/s.total*100);
-
-  // 4. Bill effectiveness (15%) — pass rate on all sponsored bills
-  let effScore=null;
-  if(totalBills>0) effScore=Math.round((s.passedBills||0)/totalBills*100);
-
-  // Weighted composite — only include components we have data for
-  let weighted=0, weight=0;
-  if(abstScore!==null){weighted+=abstScore*0.35; weight+=0.35;}
-  if(impactScore!==null){weighted+=impactScore*0.25; weight+=0.25;}
-  if(attScore!==null){weighted+=attScore*0.25; weight+=0.25;}
-  if(effScore!==null){weighted+=effScore*0.15; weight+=0.15;}
-
-  if(weight===0)return{grade:'?',score:null,color:'var(--muted)',summary:'Insufficient data to grade.'};
-
-  const final=Math.round(weighted/weight);
-
-  let grade,color;
-  if(final>=88){grade='A';color='var(--green)';}
-  else if(final>=76){grade='B';color='#2d7d9a';}
-  else if(final>=62){grade='C';color='var(--gold)';}
-  else if(final>=48){grade='D';color:'#e07b30';}
-  else{grade='F';color='var(--red)';}
-
-  // ── PLAIN-LANGUAGE SUMMARY ──
-  const att=attScore!==null?attScore+'%':'unknown';
-  const abst=abstScore!==null?(100-abstScore)+'%':'unknown';
-  const party=(pidx[pid]?.party==='R'?'Republican':'Democrat')||'their party';
-  // party-line vote calculation
-  let partyLine='';
-  // figure out majority party vote per roll call and compare
-  // simplified: count votes where they voted with the party majority
-  let withParty=0,totalPartyVotes=0;
-  const myParty=pidx[pid]?.party;
-  if(myParty){
-    (DATA.roll_calls||[]).forEach(rc=>{
-      const myVote=(rc.votes||[]).find(v=>v.people_id==pid);
-      if(!myVote||myVote.vote_id>2)return;
-      // find majority vote among same-party members
-      const partyVotes=(rc.votes||[]).filter(v=>v.party===myParty&&(v.vote_id===1||v.vote_id===2));
-      if(partyVotes.length<3)return;
-      const partyYea=partyVotes.filter(v=>v.vote_id===1).length;
-      const partyMajority=partyYea>partyVotes.length/2?1:2;
-      totalPartyVotes++;
-      if(myVote.vote_id===partyMajority)withParty++;
-    });
-    if(totalPartyVotes>10){
-      partyLine=` Voted with ${party} majority ${Math.round(withParty/totalPartyVotes*100)}% of the time.`;
-    }
-  }
-
-  const billTxt=totalBills>0
-    ?`Sponsored ${totalBills} bill${totalBills!==1?'s':''} — ${s.passedBills||0} passed${impactBills>0?`, ${impactBills} on substantive policy issues`:''}. `
-    :`No bills sponsored this session. `;
-
-  const absentTxt=abstScore!==null&&(100-abstScore)>15
-    ?` Ducked ${abst} of contested votes.`
-    :abstScore!==null?' Voted on contested issues.':``;
-
-  let verdict='';
-  if(final>=88) verdict=`<strong style="color:var(--green)">Verdict: One of the most engaged legislators this session.</strong>`;
-  else if(final>=76) verdict=`<strong style="color:#2d7d9a">Verdict: Above average — solid record with room to grow.</strong>`;
-  else if(final>=62) verdict=`<strong style="color:var(--gold)">Verdict: Mixed record — shows up but avoids accountability on key votes.</strong>`;
-  else if(final>=48) verdict=`<strong style="color:#e07b30">Verdict: Poor performance — frequently absent or disengaged on what matters.</strong>`;
-  else verdict=`<strong style="color:var(--red)">Verdict: Failing their constituents — consistent pattern of absence and inaction.</strong>`;
-
-  const summary=`Attended ${att} of recorded votes.${absentTxt} ${billTxt}${partyLine} ${verdict}`;
-
-  return{grade,score:final,color,summary};
-}
-
-// ── BOOT — auto-fetch data file ──
-document.getElementById('hdr-date').textContent=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+// ─────────────────────────────────────────────────────────────
+// BOOT
+// ─────────────────────────────────────────────────────────────
+document.getElementById('hdr-date').textContent =
+  new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
 
 async function autoLoad(){
   try{
@@ -569,14 +469,16 @@ async function autoLoad(){
     DATA=await res.json();
     init();
   }catch(e){
-    console.error('Failed to load wv_data_votes.json:',e);
+    console.error(e);
     document.querySelector('.spinner').style.display='none';
-    document.getElementById('err-box').style.display='block';
+    document.getElementById('err').style.display='block';
   }
 }
 autoLoad();
 
-// ── INIT ──
+// ─────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────
 function init(){
   const raw=DATA.bills||[];
   bills=Array.isArray(raw)?raw:Object.values(raw).filter(v=>v&&v.bill_id);
@@ -585,36 +487,136 @@ function init(){
   const allP=Array.isArray(rawP)?rawP:Object.values(rawP);
   allP.forEach(p=>{pidx[p.people_id]=p;});
 
-  // build sponsor map + enrich pidx with photo/bio from sponsor records
+  // sponsor map + photo enrichment
   smap={};
   bills.forEach(b=>{
     (b.sponsors||[]).forEach(s=>{
       const pid=s.people_id;
       if(!smap[pid])smap[pid]=[];
       if(!smap[pid].find(x=>x.bill_id===b.bill_id))smap[pid].push(b);
-      if(s.bio&&pidx[pid]){pidx[pid]._img=s.bio?.social?.image||'';pidx[pid]._bio=s.bio;}
+      if(s.bio&&pidx[pid]){
+        pidx[pid]._img=s.bio?.social?.image||'';
+        pidx[pid]._bio=s.bio;
+      }
     });
   });
 
-  // split by role_id: 1=Rep/Delegate, 2=Senator
+  // split house / senate
   delegates=allP.filter(p=>{const r=parseInt(p.role_id);return r===1||(!r&&!(p.role||'').toLowerCase().includes('sen'));});
   senators =allP.filter(p=>{const r=parseInt(p.role_id);return r===2||(p.role||'').toLowerCase().includes('sen');});
-  // fallback: split by district prefix SD-/HD-
   if(senators.length===0){
     senators =allP.filter(p=>(p.district||'').toUpperCase().startsWith('SD'));
     delegates=allP.filter(p=>!(p.district||'').toUpperCase().startsWith('SD'));
   }
 
+  // build per-person stats
+  buildStats();
+
   document.getElementById('loader').style.display='none';
   document.getElementById('app').style.display='block';
 
-  // build per-person stats from roll_calls
-  buildPstats();
-
-  updateStats();updateTicker();renderOverview();renderBills();renderDels();renderSens();
+  updateTopBar();
+  updateTicker();
+  renderOverview();
+  renderBills();
+  renderDels();
+  renderSens();
 }
 
-// ── STATUS ──
+// ─────────────────────────────────────────────────────────────
+// PER-PERSON STATS
+// ─────────────────────────────────────────────────────────────
+function buildStats(){
+  pstats={};
+  // attendance + party-line from roll calls
+  (DATA.roll_calls||[]).forEach(rc=>{
+    const votes=rc.votes||[];
+    // determine majority vote per party
+    const partyVotes={R:{yea:0,nay:0},D:{yea:0,nay:0}};
+    votes.forEach(v=>{
+      if(v.vote_id===1&&partyVotes[v.party])partyVotes[v.party].yea++;
+      if(v.vote_id===2&&partyVotes[v.party])partyVotes[v.party].nay++;
+    });
+    const partyMaj={};
+    ['R','D'].forEach(p=>{
+      const pv=partyVotes[p];
+      partyMaj[p]=pv.yea+pv.nay>=3?(pv.yea>=pv.nay?1:2):null;
+    });
+
+    votes.forEach(v=>{
+      const pid=v.people_id;
+      if(!pstats[pid])pstats[pid]={att:0,total:0,withParty:0,partyVotes:0,party:v.party};
+      pstats[pid].total++;
+      if(v.vote_id===1||v.vote_id===2){
+        pstats[pid].att++;
+        // party-line check
+        const maj=partyMaj[v.party];
+        if(maj!==null){
+          pstats[pid].partyVotes++;
+          if(v.vote_id===maj)pstats[pid].withParty++;
+        }
+      }
+    });
+  });
+}
+
+function attPct(pid){
+  const s=pstats[pid];
+  if(!s||!s.total)return null;
+  return Math.round(s.att/s.total*100);
+}
+function partyLinePct(pid){
+  const s=pstats[pid];
+  if(!s||s.partyVotes<10)return null;
+  return Math.round(s.withParty/s.partyVotes*100);
+}
+
+// ─────────────────────────────────────────────────────────────
+// PLAIN LANGUAGE FACT SUMMARY
+// ─────────────────────────────────────────────────────────────
+function factSummary(pid){
+  const p=pidx[pid];
+  if(!p)return'';
+  const mb=smap[pid]||[];
+  const passed=mb.filter(isPassed).length;
+  const att=attPct(pid);
+  const pl=partyLinePct(pid);
+  const st=pstats[pid]||{};
+  const party=p.party==='R'?'Republican':p.party==='D'?'Democrat':'their party';
+
+  // deceased check
+  const deceased=isDeceased(p);
+  if(deceased) return`<span style="color:var(--muted);font-style:italic;">${p.name} passed away during the 2026 session. Vote records reflect their time in office.</span>`;
+
+  let parts=[];
+
+  if(att!==null){
+    const attTag=att>=90?'ft-att':att>=75?'ft-att-warn':'ft-att-bad';
+    parts.push(`<span class="fact-tag ${attTag}">${att}% attendance</span> Showed up for ${st.att||0} of ${st.total||0} recorded votes.`);
+  }
+
+  if(mb.length>0){
+    parts.push(`Sponsored <strong>${mb.length}</strong> bill${mb.length!==1?'s':''} — <strong>${passed}</strong> passed into law.`);
+  } else {
+    parts.push(`Did not sponsor any bills this session.`);
+  }
+
+  if(pl!==null){
+    parts.push(`<span class="fact-tag ft-party">${pl}% party-line</span> Voted with the ${party} majority ${pl}% of the time on partisan votes.`);
+  }
+
+  return parts.join(' ');
+}
+
+function isDeceased(p){
+  // Known deceased legislators — add by name as needed
+  const deceased=['Larry Kump'];
+  return deceased.includes(p.name);
+}
+
+// ─────────────────────────────────────────────────────────────
+// STATUS HELPERS
+// ─────────────────────────────────────────────────────────────
 function statusOf(b){
   const s=parseInt(b.status)||1;
   const la=(b.last_action||'').toLowerCase();
@@ -628,56 +630,165 @@ function statusOf(b){
   if(la.includes('signed')||la.includes('enacted'))return'passed';
   return'introduced';
 }
+const isPassed=b=>['passed','enrolled'].includes(statusOf(b));
 function badge(b){
   const s=statusOf(b);
   const c={passed:'bp',enrolled:'be',failed:'bf',committee:'bc',introduced:'bi'};
   const l={passed:'Passed',enrolled:'Enrolled',failed:'Failed',committee:'Committee',introduced:'Introduced'};
   return`<span class="badge ${c[s]}">${l[s]}</span>`;
 }
-const isPassed=b=>['passed','enrolled'].includes(statusOf(b));
 
-// ── FIELD HELPERS ──
+// ─────────────────────────────────────────────────────────────
+// FIELD HELPERS
+// ─────────────────────────────────────────────────────────────
 const bN=b=>b.bill_number||b.number||'';
 const bT=b=>b.title||'Untitled';
 const bD=b=>b.description||'';
 const bLA=b=>b.last_action||'';
 const bLD=b=>b.last_action_date||b.status_date||'';
 const bURL=b=>b.state_link||b.url||'';
-const img=p=>p?._img||p?.bio?.social?.image||'';
-const phone=p=>p?._bio?.social?.capitol_phone||p?.bio?.social?.capitol_phone||'';
-const email=p=>p?._bio?.social?.email||p?.bio?.social?.email||'';
-const bioURL=p=>p?._bio?.social?.biography||p?.bio?.social?.biography||'';
-const social=p=>p?._bio?.links?.official||p?.bio?.links?.official||{};
-const init2=n=>(n||'?').split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
+const pImg=p=>p?._img||p?.bio?.social?.image||'';
+const pPhone=p=>p?._bio?.social?.capitol_phone||p?.bio?.social?.capitol_phone||'';
+const pEmail=p=>p?._bio?.social?.email||p?.bio?.social?.email||'';
+const pBioURL=p=>p?._bio?.social?.biography||p?.bio?.social?.biography||'';
+const pSocial=p=>p?._bio?.links?.official||p?.bio?.links?.official||{};
+const inits=n=>(n||'?').split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
 function safeA(o){return JSON.stringify(o).replace(/&/g,'&amp;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');}
 
-// ── STATS BAR ──
-function updateStats(){
-  const p=bills.filter(isPassed).length;
-  const r=bills.length?((p/bills.length)*100).toFixed(1):0;
+// ─────────────────────────────────────────────────────────────
+// TOP STATS BAR
+// ─────────────────────────────────────────────────────────────
+function updateTopBar(){
+  const passed=bills.filter(isPassed).length;
+  const rate=bills.length?((passed/bills.length)*100).toFixed(1):0;
   document.getElementById('s1').textContent=bills.length.toLocaleString();
-  document.getElementById('s2').textContent=p.toLocaleString();
-  document.getElementById('s3').textContent=r+'%';
+  document.getElementById('s2').textContent=passed.toLocaleString();
+  document.getElementById('s3').textContent=rate+'%';
   document.getElementById('s4').textContent=delegates.length;
   document.getElementById('s5').textContent=senators.length;
 }
 
-// ── TICKER ──
+// ─────────────────────────────────────────────────────────────
+// TICKER
+// ─────────────────────────────────────────────────────────────
 function updateTicker(){
   const passed=bills.filter(isPassed);
   const txt=passed.slice(0,25).map(b=>`✦ ${bN(b)}: ${bT(b)}`).join('          ');
   const el=document.getElementById('ticker');
-  el.textContent=txt||'2026 WV Regular Session · All Data Loaded';
-  const dur=Math.round((el.textContent.length*9+window.innerWidth)/72);
+  el.textContent=txt||'2026 West Virginia Regular Session · Data Loaded';
+  const dur=Math.round((el.textContent.length*9+window.innerWidth)/70);
   el.style.animation=`tickScroll ${dur}s linear infinite`;
 }
 
-// ── OVERVIEW ──
+// ─────────────────────────────────────────────────────────────
+// FIND MY REP
+// ─────────────────────────────────────────────────────────────
+function findRep(){
+  const county=document.getElementById('county-select').value;
+  const container=document.getElementById('rep-results');
+  if(!county){container.innerHTML='';return;}
+
+  const districts=COUNTY_DISTRICTS[county]||[];
+  // find delegates whose district matches
+  const allP=Object.values(pidx);
+  let matches=allP.filter(p=>{
+    const d=(p.district||'').toUpperCase();
+    return districts.some(dist=>d===dist.toUpperCase()||d.includes(dist.replace('HD-','').replace('SD-','')));
+  });
+
+  // fallback: search by county name in district field
+  if(matches.length===0){
+    matches=allP.filter(p=>(p.district||'').toLowerCase().includes(county.toLowerCase()));
+  }
+
+  if(matches.length===0){
+    container.innerHTML=`<div class="no-rep"><p>No exact district match found for <strong>${county} County</strong>.</p><p style="margin-top:8px;font-size:0.78rem;">Try browsing the <a href="#" onclick="showTabByName('delegates')" style="color:var(--red)">House Delegates</a> tab and searching by district number.</p></div>`;
+    return;
+  }
+
+  // sort: senators first, then delegates, both alphabetical
+  matches.sort((a,b)=>{
+    const aS=(a.role||'').includes('Sen');
+    const bS=(b.role||'').includes('Sen');
+    if(aS&&!bS)return -1;
+    if(!aS&&bS)return 1;
+    return a.name.localeCompare(b.name);
+  });
+
+  container.innerHTML=matches.map(p=>repCard(p,county)).join('');
+}
+
+function repCard(p,county){
+  const pid=p.people_id;
+  const mb=smap[pid]||[];
+  const passed=mb.filter(isPassed).length;
+  const ph=pImg(p);
+  const tel=pPhone(p);
+  const em=pEmail(p);
+  const bio=pBioURL(p);
+  const pCls=p.party==='R'?'pR':'pD';
+  const partyName=p.party==='R'?'Republican':p.party==='D'?'Democrat':p.party||'Unknown';
+  const att=attPct(pid);
+  const deceased=isDeceased(p);
+
+  const passedBills=mb.filter(isPassed).slice(0,5);
+  const recentBills=mb.slice(0,5);
+
+  return`<div class="rep-card">
+    <div class="rep-card-hd">
+      ${ph?`<img class="rep-photo" src="${ph}" alt="${p.name}" onerror="this.outerHTML='<div class=rep-photo-init>${inits(p.name)}</div>'">`:`<div class="rep-photo-init">${inits(p.name)}</div>`}
+      <div class="rep-hd-info">
+        <div class="rep-role">${p.role||'Legislator'} · ${p.district||''} · ${county} County</div>
+        <div class="rep-name">${p.name}${deceased?' <span style="font-family:\'IBM Plex Sans\',sans-serif;font-size:0.7rem;color:var(--muted);font-weight:300;">† 2026</span>':''}</div>
+        <div class="rep-party <span class="${pCls}">${partyName}</span></div>
+        <div class="rep-contact">
+          ${tel?`<a class="con-chip" href="tel:${tel}">📞 ${tel}</a>`:''}
+          ${em?`<a class="con-chip" href="mailto:${em}">✉ ${em}</a>`:''}
+          ${bio?`<a class="con-chip" href="${bio}" target="_blank">🏛 Official Page</a>`:''}
+        </div>
+      </div>
+      <div style="flex-shrink:0;text-align:center;cursor:pointer;" onclick="openPM(${pid})" title="View full profile">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">Full Record</div>
+        <div style="font-size:1.4rem;">→</div>
+      </div>
+    </div>
+
+    <div class="fact-summary">
+      ${factSummary(pid)}
+    </div>
+
+    ${passedBills.length?`
+    <div class="rep-bills">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Bills Passed Into Law</div>
+      ${passedBills.map(b=>`<div class="rbill-row" onclick='openBM(${safeA(b)})'>
+        <span class="rbill-num">${bN(b)}</span>
+        <span class="rbill-title">${bT(b)}</span>
+        <span>${badge(b)}</span>
+      </div>`).join('')}
+      ${mb.length>5?`<div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);margin-top:8px;cursor:pointer;" onclick="openPM(${pid})">+ ${mb.length-5} more bills → view full record</div>`:''}
+    </div>`:''}
+  </div>`;
+}
+
+function showTabByName(n){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+n).classList.add('on');
+}
+
+// ─────────────────────────────────────────────────────────────
+// OVERVIEW
+// ─────────────────────────────────────────────────────────────
 function renderOverview(){
   const allP=Object.values(pidx);
-  const rC=allP.filter(p=>p.party==='R').length,dC=allP.filter(p=>p.party==='D').length,tot=rC+dC||1;
-  document.getElementById('pbar').innerHTML=`<div class="p-R" style="width:${(rC/tot*100).toFixed(1)}%"><span class="p-lbl">R ${rC}</span></div><div class="p-D" style="width:${(dC/tot*100).toFixed(1)}%"><span class="p-lbl">D ${dC}</span></div>`;
-  document.getElementById('psub').textContent=`Republican ${rC} (${(rC/tot*100).toFixed(0)}%) · Democrat ${dC} (${(dC/tot*100).toFixed(0)}%) · Total ${tot} legislators`;
+  const rC=allP.filter(p=>p.party==='R').length;
+  const dC=allP.filter(p=>p.party==='D').length;
+  const tot=rC+dC||1;
+  document.getElementById('pbar').innerHTML=
+    `<div class="p-R" style="width:${(rC/tot*100).toFixed(1)}%"><span class="p-lbl">R ${rC}</span></div>
+     <div class="p-D" style="width:${(dC/tot*100).toFixed(1)}%"><span class="p-lbl">D ${dC}</span></div>`;
+  document.getElementById('psub').textContent=
+    `Republican ${rC} (${(rC/tot*100).toFixed(0)}%) · Democrat ${dC} (${(dC/tot*100).toFixed(0)}%) · Total ${tot} legislators`;
 
   // top sponsors
   const cnts={};
@@ -685,12 +796,12 @@ function renderOverview(){
   const top=Object.entries(cnts).sort((a,b)=>b[1]-a[1]).slice(0,10);
   document.getElementById('top-sponsors').innerHTML=top.map(([pid,cnt],i)=>{
     const p=pidx[pid];if(!p)return'';
-    const ph=img(p);const pCls=p.party==='R'?'pR':'pD';
+    const ph=pImg(p);const pCls=p.party==='R'?'pR':'pD';
     return`<div class="sp-row" onclick="openPM(${pid})">
       <span class="sp-rank">${i+1}</span>
-      ${ph?`<img class="sp-photo" src="${ph}" alt="${p.name}" onerror="this.style.display='none'">`:`<div class="sp-photo-init">${init2(p.name)}</div>`}
+      ${ph?`<img class="sp-photo" src="${ph}" alt="${p.name}" onerror="this.style.display='none'">`:`<div class="sp-init">${inits(p.name)}</div>`}
       <span class="sp-name">${p.name}</span>
-      <span class="sp-party ${pCls}">${p.party}</span>
+      <span class="sp-party ${pCls}" style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;">${p.party}</span>
       <span class="sp-cnt">${cnt}</span>
     </div>`;
   }).join('');
@@ -698,31 +809,30 @@ function renderOverview(){
   const passed=bills.filter(isPassed).length;
   const failed=bills.filter(b=>statusOf(b)==='failed').length;
   const com=bills.filter(b=>statusOf(b)==='committee').length;
-  const intro=bills.filter(b=>statusOf(b)==='introduced').length;
   const hB=bills.filter(b=>bN(b).startsWith('H')).length;
   const sB=bills.filter(b=>bN(b).startsWith('S')).length;
 
-  document.getElementById('gc-grid').innerHTML=[
-    ['Total Bills',bills.length,''],['Passed/Enrolled',passed,'green'],
-    ['House Bills',hB,''],['Senate Bills',sB,'blue']
-  ].map(([l,v,c])=>`<div class="gc"><div class="gc-n" style="${c?'color:var(--'+c+')':''}">${v.toLocaleString()}</div><div class="gc-l">${l}</div></div>`).join('');
+  document.getElementById('gc-grid').innerHTML=
+    [['Total Bills',bills.length,''],['Passed/Enrolled',passed,'green'],
+     ['House Bills',hB,''],['Senate Bills',sB,'blue']]
+    .map(([l,v,c])=>`<div class="gc"><div class="gcn" style="${c?'color:var(--'+c+')':''}">${v.toLocaleString()}</div><div class="gcl">${l}</div></div>`).join('');
 
-  document.getElementById('status-bd').innerHTML=[
-    ['Passed / Enrolled',passed,'var(--green)'],['In Committee',com,'var(--gold)'],
-    ['Introduced',intro,'var(--muted)'],['Failed / Vetoed',failed,'var(--red)'],
-    ['Passage Rate',bills.length?((passed/bills.length)*100).toFixed(1)+'%':'0%','var(--red)']
-  ].map(([l,v,c])=>`<div class="stat-row"><span class="stat-row-l">${l}</span><strong class="stat-row-v" style="color:${c}">${typeof v==='number'?v.toLocaleString():v}</strong></div>`).join('');
+  document.getElementById('status-bd').innerHTML=
+    [['Passed / Enrolled',passed,'var(--green)'],['In Committee',com,'var(--gold)'],
+     ['Failed / Vetoed',failed,'var(--red)'],
+     ['Passage Rate',bills.length?((passed/bills.length)*100).toFixed(1)+'%':'0%','var(--red)']]
+    .map(([l,v,c])=>`<div class="stat-row"><span class="sr-l">${l}</span><strong class="sr-v" style="color:${c}">${typeof v==='number'?v.toLocaleString():v}</strong></div>`).join('');
 
   const picks=bills.filter(isPassed).slice(0,4);
   const tags=['Signed Into Law','High Impact','Notable','Enacted'];
   document.getElementById('spot-grid').innerHTML=picks.length
-    ?picks.map((b,i)=>`<div class="spot-card c${i}" onclick='openBM(${safeA(b)})'>
-        <div><span class="sp-tag t${i}">${tags[i]}</span></div>
-        <div class="sp-bnum">${bN(b)}</div>
-        <div class="sp-btitle">${bT(b)}</div>
-        <div class="sp-bdesc">${(bD(b)||bLA(b)).slice(0,110)}…</div>
+    ?picks.map((b,i)=>`<div class="spot c${i}" onclick='openBM(${safeA(b)})'>
+        <div><span class="spot-tag st${i}">${tags[i]}</span></div>
+        <div class="spot-num">${bN(b)}</div>
+        <div class="spot-title">${bT(b)}</div>
+        <div class="spot-desc">${(bD(b)||bLA(b)).slice(0,100)}…</div>
       </div>`).join('')
-    :'<p style="color:var(--muted);font-size:0.84rem;grid-column:1/-1;padding:14px 0;">No passed bills detected — see Bills tab for full list.</p>';
+    :'<p style="color:var(--muted);font-size:0.84rem;grid-column:1/-1">No passed bills detected.</p>';
 
   const recent=[...bills].sort((a,b)=>bLD(b).localeCompare(bLD(a))).slice(0,25);
   document.getElementById('feed').innerHTML=recent.map(b=>`
@@ -734,7 +844,9 @@ function renderOverview(){
     </div>`).join('');
 }
 
-// ── BILLS TAB ──
+// ─────────────────────────────────────────────────────────────
+// BILLS TAB
+// ─────────────────────────────────────────────────────────────
 function renderBills(){
   const q=(document.getElementById('bsearch').value||'').toLowerCase();
   const fs=document.getElementById('fstat').value;
@@ -767,8 +879,8 @@ function renderBP(){
   }).join('');
   const tp=Math.ceil(fbills.length/PG)||1;
   document.getElementById('bpager').innerHTML=`
-    <span class="pager-info">Page ${bpage} of ${tp} · ${fbills.length.toLocaleString()} bills</span>
-    <div class="pager-btns">
+    <span class="pi">Page ${bpage} of ${tp} · ${fbills.length.toLocaleString()} bills</span>
+    <div class="pbtns">
       <button class="pbtn" onclick="goBP(1)" ${bpage===1?'disabled':''}>«</button>
       <button class="pbtn" onclick="goBP(${bpage-1})" ${bpage===1?'disabled':''}>‹</button>
       ${Array.from({length:Math.min(5,tp)},(_,i)=>{const p=Math.max(1,Math.min(bpage-2,tp-4))+i;return p<=tp?`<button class="pbtn ${p===bpage?'on':''}" onclick="goBP(${p})">${p}</button>`:''}).join('')}
@@ -778,98 +890,105 @@ function renderBP(){
 }
 function goBP(p){const tp=Math.ceil(fbills.length/PG)||1;if(p<1||p>tp)return;bpage=p;renderBP();document.getElementById('tab-bills').scrollIntoView({behavior:'smooth',block:'start'});}
 
-// ── PEOPLE CARDS ──
-function pRate(pid){const bs=smap[pid]||[];if(!bs.length)return null;return Math.round(bs.filter(isPassed).length/bs.length*100);}
+// ─────────────────────────────────────────────────────────────
+// LEGISLATOR CARDS
+// ─────────────────────────────────────────────────────────────
+function legCard(p){
+  const pid=p.people_id;
+  const mb=smap[pid]||[];
+  const passed=mb.filter(isPassed).length;
+  const ph=pImg(p);
+  const pCls=p.party==='R'?'pR':'pD';
+  const att=attPct(pid);
+  const pl=partyLinePct(pid);
+  const st=pstats[pid]||{};
+  const attPct2=att!==null?att:0;
+  const attCol=att===null?'':att>=90?'var(--green)':att>=75?'var(--gold)':'var(--red)';
+  const deceased=isDeceased(p);
 
-function personCard(p){
-  const pid=p.people_id,mb=smap[pid]||[];
-  const passed=mb.filter(isPassed).length,rate=mb.length?Math.round(passed/mb.length*100):0;
-  const ph=img(p),pCls=p.party==='R'?'pR':'pD';
-  const barCol=p.party==='R'?'var(--red)':'var(--blue)';
-  const att=attendancePct(pid);
-  const abst=abstentionPct(pid);
-  const sc=scorecard(pid);
-  const attCol=att===null?'':att>=90?'color:var(--green)':att>=75?'color:var(--gold)':'color:var(--red)';
-  const abstCol=abst===null?'':abst<=10?'color:var(--green)':abst<=25?'color:var(--gold)':'color:var(--red)';
   return`<div class="dcard" onclick="openPM(${pid})">
-    <div class="dtop">
-      ${ph?`<img class="dphoto" src="${ph}" alt="${p.name}" onerror="this.outerHTML='<div class=dinit>${init2(p.name)}</div>'">`:`<div class="dinit">${init2(p.name)}</div>`}
-      <div class="dinfo">
-        <div class="dname">${p.name}</div>
-        <div class="dmeta"><span class="${pCls}">${p.party||'?'}</span> · ${p.district||'?'}<br>${p.role||'Legislator'}</div>
-      </div>
-      <div style="text-align:center;flex-shrink:0;padding-left:8px;">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;line-height:1;color:${sc.color}">${sc.grade}</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.46rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);">Grade</div>
+    <div class="dc-top">
+      ${ph?`<img class="dc-photo" src="${ph}" alt="${p.name}" onerror="this.outerHTML='<div class=dc-init>${inits(p.name)}</div>'">`:`<div class="dc-init">${inits(p.name)}</div>`}
+      <div class="dc-info">
+        <div class="dc-name">${p.name}${deceased?' †':''}</div>
+        <div class="dc-meta"><span class="${pCls}">${p.party||'?'}</span> · ${p.district||'?'}<br>${p.role||'Legislator'}</div>
       </div>
     </div>
-    <div class="dbar-wrap"><div class="dbar"><div class="dbar-fill" style="width:${att!==null?att:50}%;background:${barCol}"></div></div></div>
-    <div class="dstats">
-      <div class="ds"><div class="dsn" style="${attCol}">${att!==null?att+'%':'—'}</div><div class="dsl">Attendance</div></div>
-      <div class="ds"><div class="dsn" style="${abstCol}">${abst!==null?abst+'%':'—'}</div><div class="dsl">Ducked Votes</div></div>
+    <div class="att-bar"><div class="att-fill" style="width:${attPct2}%;background:${attCol}"></div></div>
+    <div class="dc-stats">
+      <div class="ds"><div class="dsn" style="color:${attCol}">${att!==null?att+'%':'—'}</div><div class="dsl">Attendance</div></div>
       <div class="ds"><div class="dsn">${mb.length||'—'}</div><div class="dsl">Bills Filed</div></div>
+      <div class="ds"><div class="dsn">${pl!==null?pl+'%':'—'}</div><div class="dsl">Party-Line</div></div>
     </div>
   </div>`;
 }
 
-function sortP(arr,so){
+function sortL(arr,so){
   if(so==='district')arr.sort((a,b)=>(parseInt(a.district)||0)-(parseInt(b.district)||0));
-  else if(so==='hi')arr.sort((a,b)=>(smap[b.people_id]||[]).length-(smap[a.people_id]||[]).length);
-  else if(so==='lo')arr.sort((a,b)=>(smap[a.people_id]||[]).length-(smap[b.people_id]||[]).length);
-  else if(so==='rhi')arr.sort((a,b)=>(pRate(b.people_id)||0)-(pRate(a.people_id)||0));
-  else if(so==='rlo')arr.sort((a,b)=>(pRate(a.people_id)||0)-(pRate(b.people_id)||0));
-  else if(so==='att_hi')arr.sort((a,b)=>(attendancePct(b.people_id)||0)-(attendancePct(a.people_id)||0));
-  else if(so==='att_lo')arr.sort((a,b)=>(attendancePct(a.people_id)||0)-(attendancePct(b.people_id)||0));
-  else if(so==='grade_hi')arr.sort((a,b)=>(scorecard(b.people_id).score||0)-(scorecard(a.people_id).score||0));
-  else if(so==='grade_lo')arr.sort((a,b)=>(scorecard(a.people_id).score||0)-(scorecard(b.people_id).score||0));
+  else if(so==='att_hi')arr.sort((a,b)=>(attPct(b.people_id)||0)-(attPct(a.people_id)||0));
+  else if(so==='att_lo')arr.sort((a,b)=>(attPct(a.people_id)||0)-(attPct(b.people_id)||0));
+  else if(so==='bills_hi')arr.sort((a,b)=>(smap[b.people_id]||[]).length-(smap[a.people_id]||[]).length);
+  else if(so==='party_hi')arr.sort((a,b)=>(partyLinePct(b.people_id)||0)-(partyLinePct(a.people_id)||0));
   else arr.sort((a,b)=>a.name.localeCompare(b.name));
 }
 
 function renderDels(){
   const q=(document.getElementById('dsearch').value||'').toLowerCase();
-  const fp=document.getElementById('dparty').value,so=document.getElementById('dsort').value;
+  const fp=document.getElementById('dparty').value;
+  const so=document.getElementById('dsort').value;
   let arr=delegates.filter(p=>(!q||p.name.toLowerCase().includes(q)||String(p.district||'').toLowerCase().includes(q))&&(!fp||p.party===fp));
-  sortP(arr,so);
+  sortL(arr,so);
   document.getElementById('dcnt').textContent=`${arr.length} delegates`;
-  document.getElementById('dgrid').innerHTML=arr.map(personCard).join('');
+  document.getElementById('dgrid').innerHTML=arr.map(legCard).join('');
 }
 
 function renderSens(){
   const q=(document.getElementById('ssearch').value||'').toLowerCase();
-  const fp=document.getElementById('sparty').value,so=document.getElementById('ssort').value;
+  const fp=document.getElementById('sparty').value;
+  const so=document.getElementById('ssort').value;
   let arr=senators.filter(p=>(!q||p.name.toLowerCase().includes(q)||String(p.district||'').toLowerCase().includes(q))&&(!fp||p.party===fp));
-  sortP(arr,so);
+  sortL(arr,so);
   document.getElementById('scnt').textContent=`${arr.length} senators`;
-  document.getElementById('sgrid').innerHTML=arr.length?arr.map(personCard).join('')
-    :`<p style="color:var(--muted);font-size:0.85rem;padding:20px;grid-column:1/-1;">All legislators shown in House Delegates tab. Senate role classification depends on role_id in data.</p>`;
+  document.getElementById('sgrid').innerHTML=arr.length
+    ?arr.map(legCard).join('')
+    :`<p style="color:var(--muted);font-size:0.85rem;padding:20px;grid-column:1/-1;">All legislators shown in House Delegates tab.</p>`;
 }
 
-// ── MODALS ──
+// ─────────────────────────────────────────────────────────────
+// MODALS
+// ─────────────────────────────────────────────────────────────
 function openPM(pid){
   const p=pidx[pid];if(!p)return;
-  const mb=smap[pid]||[],passed=mb.filter(isPassed).length,rate=mb.length?Math.round(passed/mb.length*100):0;
-  const ph=img(p),tel=phone(p),em=email(p),bio=bioURL(p),soc=social(p);
-  const att=attendancePct(pid);
-  const abst=abstentionPct(pid);
-  const sc=scorecard(pid);
+  const mb=smap[pid]||[];
+  const passed=mb.filter(isPassed).length;
+  const ph=pImg(p);
+  const tel=pPhone(p);
+  const em=pEmail(p);
+  const bio=pBioURL(p);
+  const soc=pSocial(p);
+  const att=attPct(pid);
+  const pl=partyLinePct(pid);
   const st=pstats[pid]||{};
+  const deceased=isDeceased(p);
+
   document.getElementById('mph').src=ph;
   document.getElementById('mph').style.display=ph?'block':'none';
-  document.getElementById('mkick').textContent=`${p.role||'Legislator'} · ${p.party||'?'} · ${p.district||''}`;
-  document.getElementById('mtitle').textContent=p.name;
-  document.getElementById('msub').textContent=p.party==='R'?'Republican':p.party==='D'?'Democrat':'';
+  document.getElementById('mkick').textContent=`${p.role||'Legislator'} · ${p.party==='R'?'Republican':p.party==='D'?'Democrat':p.party||'?'} · ${p.district||''}`;
+  document.getElementById('mtitle').textContent=p.name+(deceased?' †':'');
+  document.getElementById('msub').textContent=p.district||'';
 
   const socLinks=Object.entries(soc).filter(([k,v])=>v&&v.startsWith('http')).map(([k,v])=>`<a class="soc-link" href="${v}" target="_blank">${k}</a>`).join('');
+  const attCol=att===null?'':att>=90?'var(--green)':att>=75?'var(--gold)':'var(--red)';
 
-  let h=`<div class="score-wrap">
-    <div class="sbox2"><div class="sn" style="color:${sc.color};font-size:2.4rem">${sc.grade}</div><div class="sl">Overall Grade</div></div>
-    <div class="sbox2"><div class="sn" style="${att!==null&&att<80?'color:var(--red)':att!==null?'color:var(--green)':''}">${att!==null?att+'%':'—'}</div><div class="sl">Attendance${st.total?` (${st.attended}/${st.total})`:''}</div></div>
-    <div class="sbox2"><div class="sn" style="${abst!==null&&abst>20?'color:var(--red)':abst!==null?'color:var(--green)':''}">${abst!==null?abst+'%':'—'}</div><div class="sl">Ducked Contested Votes${st.totalContested?` (${st.abstainedContested}/${st.totalContested})`:''}</div></div>
-    <div class="sbox2"><div class="sn">${mb.length||'—'}</div><div class="sl">Bills Sponsored</div></div>
-  </div>
-  <div style="padding:14px 16px;background:var(--paper2);border:1px solid var(--border);margin-bottom:16px;font-size:0.83rem;line-height:1.7;border-left:3px solid ${sc.color}">
-    ${sc.summary}
-  </div>`;
+  let h=`
+    <div class="srow">
+      <div class="sbox"><div class="sn2" style="color:${attCol}">${att!==null?att+'%':'—'}</div><div class="sl2">Attendance${st.total?` (${st.att||0}/${st.total} votes)`:''}</div></div>
+      <div class="sbox"><div class="sn2">${pl!==null?pl+'%':'—'}</div><div class="sl2">Voted Party-Line${st.partyVotes?` (${st.partyVotes} votes)`:''}</div></div>
+      <div class="sbox"><div class="sn2">${mb.length||'—'}</div><div class="sl2">Bills Sponsored</div></div>
+      <div class="sbox"><div class="sn2" style="color:var(--green)">${passed||'—'}</div><div class="sl2">Bills Passed</div></div>
+    </div>
+    <div class="fact-box">${factSummary(pid)}</div>`;
+
   if(tel||em||bio){
     h+=`<h3>Contact</h3><div class="chip-row">`;
     if(tel)h+=`<a class="chip" href="tel:${tel}">📞 ${tel}</a>`;
@@ -880,130 +999,96 @@ function openPM(pid){
   if(socLinks)h+=`<h3>Social Media</h3><div class="soc-links">${socLinks}</div>`;
 
   h+=`<h3>Bills Sponsored This Session (${mb.length})</h3>`;
-  if(!mb.length){h+=`<p style="color:var(--muted);font-size:0.83rem;">No bills found for this legislator in the sponsor data.</p>`;}
-  else{
-    h+=`<ul class="mini-list">`+mb.slice(0,40).map(b=>`<li class="mini-item"><span class="mini-num">${bN(b)}</span><span style="flex:1">${bT(b)}</span><span style="flex-shrink:0">${badge(b)}</span></li>`).join('');
-    if(mb.length>40)h+=`<li class="mini-item" style="color:var(--muted);font-style:italic;">…and ${mb.length-40} more</li>`;
-    h+=`</ul>`;
+  if(!mb.length){
+    h+=`<p style="color:var(--muted);font-size:0.83rem;">No bills found for this legislator.</p>`;
+  } else {
+    h+=`<ul class="mini-list">`+
+      mb.slice(0,40).map(b=>`<li class="mini-item"><span class="mini-num">${bN(b)}</span><span style="flex:1">${bT(b)}</span><span style="flex-shrink:0">${badge(b)}</span></li>`).join('')+
+      (mb.length>40?`<li class="mini-item" style="color:var(--muted);font-style:italic;">…and ${mb.length-40} more</li>`:'')+
+      `</ul>`;
   }
+
   document.getElementById('mbd').innerHTML=h;
   document.getElementById('mwrap').classList.add('open');
 }
 
 function openBM(bill){
   const sp=(bill.sponsors||[]).find(s=>s.sponsor_order===1)||(bill.sponsors||[])[0];
-  const ph=sp?img(sp):'';
+  const ph=sp?pImg(sp):'';
   document.getElementById('mph').src=ph;
   document.getElementById('mph').style.display=ph?'block':'none';
   document.getElementById('mkick').textContent=bN(bill)+(bill.body?' · '+bill.body:'');
   document.getElementById('mtitle').textContent=bT(bill);
   document.getElementById('msub').textContent=bLD(bill)?`Last action: ${bLD(bill)}`:'';
 
-  const allSp=(bill.sponsors||[]).map(s=>`<span class="chip" onclick="closeM();openPM(${s.people_id})" style="cursor:pointer;">${s.name} (${s.party||'?'})</span>`).join('');
+  const allSp=(bill.sponsors||[]).map(s=>`<span class="chip" onclick="closeM();openPM(${s.people_id})">${s.name} (${s.party||'?'})</span>`).join('');
 
-  // ── ROLL CALL GRID ──
+  // roll call grid
   const billVoteIds=(bill.votes||[]).map(v=>v.roll_call_id).filter(Boolean);
-  const rollCalls=(DATA.roll_calls||[]).filter(rc=>billVoteIds.includes(rc.roll_call_id));
+  const rcs=(DATA.roll_calls||[]).filter(rc=>billVoteIds.includes(rc.roll_call_id));
   let vh='';
-  if(rollCalls.length){
-    rollCalls.forEach(rc=>{
+  if(rcs.length){
+    rcs.forEach(rc=>{
       const yea=(rc.votes||[]).filter(v=>v.vote_id===1);
       const nay=(rc.votes||[]).filter(v=>v.vote_id===2);
-      const abs=(rc.votes||[]).filter(v=>v.vote_id===4||v.vote_id===5);
+      const abs=(rc.votes||[]).filter(v=>v.vote_id>=3);
       const tot=yea.length+nay.length;
-      const yeaPct=tot?Math.round(yea.length/tot*100):0;
+      const yp=tot?Math.round(yea.length/tot*100):0;
       vh+=`<h3>${rc.desc||rc.chamber||'Vote'} — ${rc.date||''} &nbsp;
         <span style="color:var(--green)">${yea.length} Yea</span> /
         <span style="color:var(--red)">${nay.length} Nay</span>
-        ${abs.length?`/ <span style="color:var(--muted)">${abs.length} Absent</span>`:''}
+        ${abs.length?`/ <span style="color:var(--muted)">${abs.length} Absent/NV</span>`:''}
       </h3>
-      <div class="vbar-wrap" style="margin-bottom:14px;">
-        <div class="vbar" style="height:8px;">
-          <div class="vbar-y" style="width:${yeaPct}%"></div>
-        </div>
-      </div>`;
+      <div class="vbar-wrap" style="margin-bottom:12px;"><div class="vbar" style="height:7px;"><div class="vbar-y" style="width:${yp}%"></div></div></div>`;
 
-      // YEA votes grid
-      if(yea.length){
-        vh+=`<div style="font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin-bottom:8px;">✓ Voted Yea</div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">`;
-        yea.forEach(v=>{
-          const p=pidx[v.people_id];
-          const ph=p?img(p):'';
-          const name=v.name||(p?p.name:'Unknown');
-          const party=v.party||(p?p.party:'?');
-          const pCol=party==='R'?'var(--red)':'var(--blue)';
-          vh+=`<div onclick="closeM();openPM(${v.people_id})" style="display:flex;align-items:center;gap:5px;padding:4px 8px 4px 4px;border:1px solid #d1e8d8;background:#f0faf3;cursor:pointer;transition:all .12s;border-radius:2px;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='#d1e8d8'">
-            ${ph?`<img src="${ph}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'">`:`<div style="width:20px;height:20px;border-radius:50%;background:var(--paper3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:0.6rem;color:var(--muted);">${init2(name)}</div>`}
-            <span style="font-size:0.72rem;white-space:nowrap;">${name}</span>
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:0.55rem;color:${pCol}">${party}</span>
-          </div>`;
-        });
-        vh+=`</div>`;
-      }
+      const makeChips=(votes,bg,bdr)=>votes.map(v=>{
+        const p=pidx[v.people_id];
+        const ph2=p?pImg(p):'';
+        const name=v.name||(p?p.name:'?');
+        const pty=v.party||(p?p.party:'?');
+        const pCol=pty==='R'?'var(--red)':'var(--blue)';
+        return`<div class="rc-chip" style="background:${bg};border:1px solid ${bdr};" onclick="closeM();openPM(${v.people_id})">
+          ${ph2?`<img src="${ph2}" onerror="this.style.display='none'" style="width:18px;height:18px;border-radius:50%;object-fit:cover;flex-shrink:0;">`:`<div class="rc-init">${inits(name)}</div>`}
+          <span>${name}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:0.52rem;color:${pCol}">${pty}</span>
+        </div>`;
+      }).join('');
 
-      // NAY votes grid
-      if(nay.length){
-        vh+=`<div style="font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--red);margin-bottom:8px;">✗ Voted Nay</div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">`;
-        nay.forEach(v=>{
-          const p=pidx[v.people_id];
-          const ph=p?img(p):'';
-          const name=v.name||(p?p.name:'Unknown');
-          const party=v.party||(p?p.party:'?');
-          const pCol=party==='R'?'var(--red)':'var(--blue)';
-          vh+=`<div onclick="closeM();openPM(${v.people_id})" style="display:flex;align-items:center;gap:5px;padding:4px 8px 4px 4px;border:1px solid #f5d5d2;background:#fdf5f5;cursor:pointer;transition:all .12s;border-radius:2px;" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='#f5d5d2'">
-            ${ph?`<img src="${ph}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'">`:`<div style="width:20px;height:20px;border-radius:50%;background:var(--paper3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:0.6rem;color:var(--muted);">${init2(name)}</div>`}
-            <span style="font-size:0.72rem;white-space:nowrap;">${name}</span>
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:0.55rem;color:${pCol}">${party}</span>
-          </div>`;
-        });
-        vh+=`</div>`;
-      }
-
-      // Absent
-      if(abs.length){
-        vh+=`<div style="font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">— Absent / Not Voting</div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">`;
-        abs.forEach(v=>{
-          const p=pidx[v.people_id];
-          const name=v.name||(p?p.name:'Unknown');
-          vh+=`<div onclick="closeM();openPM(${v.people_id})" style="display:flex;align-items:center;gap:5px;padding:4px 8px 4px 4px;border:1px solid var(--border);background:var(--paper2);cursor:pointer;border-radius:2px;opacity:0.7;">
-            <span style="font-size:0.72rem;white-space:nowrap;color:var(--muted)">${name}</span>
-          </div>`;
-        });
-        vh+=`</div>`;
-      }
+      if(yea.length){vh+=`<div class="rc-label" style="color:var(--green)">✓ Voted Yea (${yea.length})</div><div class="rc-grid" style="margin-bottom:12px;">${makeChips(yea,'#f0faf3','#d1e8d8')}</div>`;}
+      if(nay.length){vh+=`<div class="rc-label" style="color:var(--red)">✗ Voted Nay (${nay.length})</div><div class="rc-grid" style="margin-bottom:12px;">${makeChips(nay,'#fdf5f5','#f5d5d2')}</div>`;}
+      if(abs.length){vh+=`<div class="rc-label" style="color:var(--muted)">— Absent / Not Voting (${abs.length})</div><div class="rc-grid" style="margin-bottom:12px;">${makeChips(abs,'var(--paper2)','var(--border)')}</div>`;}
     });
   }
 
   const hist=(bill.history||[]).slice(-6).reverse();
   let hh='';
   if(hist.length){
-    hh=`<h3>Legislative History</h3><ul class="mini-list">`+hist.map(h=>`<li class="mini-item"><span class="mini-num" style="color:var(--muted)">${h.date||''}</span><span>${h.action||''}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:var(--muted)">${h.chamber||''}</span></li>`).join('')+`</ul>`;
+    hh=`<h3>Legislative History</h3><ul class="mini-list">`+
+      hist.map(h=>`<li class="mini-item"><span class="mini-num" style="color:var(--muted)">${h.date||''}</span><span>${h.action||''}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:0.56rem;color:var(--muted)">${h.chamber||''}</span></li>`).join('')+
+      `</ul>`;
   }
 
   document.getElementById('mbd').innerHTML=`
-    <div class="score-wrap">
-      <div class="sbox2"><div class="sn">${badge(bill)}</div><div class="sl">Status</div></div>
-      <div class="sbox2"><div class="sn" style="font-size:1rem;font-family:'IBM Plex Mono',monospace">${bLD(bill)||'—'}</div><div class="sl">Last Action</div></div>
-      <div class="sbox2"><div class="sn" style="font-size:1rem;font-family:'IBM Plex Mono',monospace">${bill.body||'—'}</div><div class="sl">Chamber</div></div>
+    <div class="srow">
+      <div class="sbox"><div class="sn2">${badge(bill)}</div><div class="sl2">Status</div></div>
+      <div class="sbox"><div class="sn2" style="font-size:1rem;font-family:'IBM Plex Mono',monospace">${bLD(bill)||'—'}</div><div class="sl2">Last Action</div></div>
+      <div class="sbox"><div class="sn2" style="font-size:1rem;font-family:'IBM Plex Mono',monospace">${bill.body||'—'}</div><div class="sl2">Chamber</div></div>
     </div>
     ${bD(bill)?`<h3>Description</h3><p style="font-size:0.83rem;line-height:1.65;margin-bottom:4px">${bD(bill)}</p>`:''}
     <h3>Sponsors</h3><div class="chip-row">${allSp||'—'}</div>
-    ${vh||''}
-    ${hh}
+    ${vh}${hh}
     ${bURL(bill)?`<h3>Source</h3><p><a href="${bURL(bill)}" target="_blank" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--red)">${bURL(bill)}</a></p>`:''}`;
   document.getElementById('mwrap').classList.add('open');
 }
 
 function closeM(){document.getElementById('mwrap').classList.remove('open');}
 function maybeClose(e){if(e.target===document.getElementById('mwrap'))closeM();}
+
 function showTab(n,btn){
-  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+n).classList.add('active');
-  btn.classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+n).classList.add('on');
+  btn.classList.add('on');
 }
 </script>
 </body>
