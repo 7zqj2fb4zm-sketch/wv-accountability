@@ -22,18 +22,17 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .mf-side{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;letter-spacing:0.14em;color:rgba(255,255,255,0.38);text-transform:uppercase;padding:8px 0;min-width:160px;}
 .mf-side.right{text-align:right;}
 .mf-center{text-align:center;padding:10px 20px 8px;flex:1;}
-.mf-center h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.2rem,3.2vw,2.2rem);letter-spacing:0.08em;line-height:1;color:#fff;}
+.mf-center h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,3.8vw,2.8rem);letter-spacing:0.08em;line-height:1;color:#fff;}
 .mf-center .sub{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.18em;color:rgba(255,255,255,0.35);text-transform:uppercase;margin-top:2px;}
 .mast-nav{display:flex;justify-content:center;}
 .tab-btn{font-family:'IBM Plex Mono',monospace;font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase;padding:11px 26px;background:none;border:none;border-right:1px solid rgba(255,255,255,0.07);cursor:pointer;color:rgba(255,255,255,0.42);transition:all .18s;}
 .tab-btn:first-child{border-left:1px solid rgba(255,255,255,0.07);}
 .tab-btn:hover{color:#fff;background:rgba(255,255,255,0.06);}
 .tab-btn.active{color:#fff;background:var(--red);border-color:var(--red2);}
-/* push page content below fixed header */
-body>*:not(.masthead){margin-top:0;}
-#app,#loader{padding-top:110px;}
+/* push page content below fixed header (header ~130px + ticker ~28px) */
+#app,#loader{padding-top:158px;}
 
-/* TICKER */
+/* TICKER — inside fixed header */
 .ticker{background:var(--red);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.05em;padding:5px 0;overflow:hidden;white-space:nowrap;}
 .ticker-inner{display:inline-block;}
 @keyframes tickScroll{from{transform:translateX(100vw);}to{transform:translateX(-100%);}}
@@ -235,9 +234,8 @@ body>*:not(.masthead){margin-top:0;}
     <button class="tab-btn" onclick="showTab('delegates',this)">House Delegates</button>
     <button class="tab-btn" onclick="showTab('senate',this)">Senate</button>
   </div>
+  <div class="ticker"><span class="ticker-inner" id="ticker">Loading session data…</span></div>
 </div>
-
-<div class="ticker"><span class="ticker-inner" id="ticker">Loading session data…</span></div>
 
 <div id="loader">
   <h2>WV Legislative Accountability Project</h2>
@@ -277,18 +275,6 @@ body>*:not(.masthead){margin-top:0;}
       </div>
       <div class="sec">Notable Bills — Passed Into Law</div>
       <div class="spot-grid" id="spot-grid"></div>
-
-      <div class="hall-grid">
-        <div class="hall-section">
-          <div class="sec" style="color:var(--red);border-color:var(--red);">⚠ Hall of Shame — Bills That Hurt West Virginians</div>
-          <div id="hall-shame"></div>
-        </div>
-        <div class="hall-section">
-          <div class="sec" style="color:var(--green);border-color:var(--green);">★ Hall of Fame — Bills That Helped West Virginians</div>
-          <div id="hall-fame"></div>
-        </div>
-      </div>
-
       <div class="sec">Recent Activity — Last 25 Bills Acted On</div>
       <div id="feed"></div>
     </div>
@@ -488,7 +474,7 @@ function init(){
     });
   });
 
-  updateStats();updateTicker();renderOverview();renderHalls();renderBills();renderDels();renderSens();
+  updateStats();updateTicker();renderOverview();renderBills();renderDels();renderSens();
 }
 
 // ── HALL OF SHAME / FAME KEYWORDS ──
@@ -842,15 +828,83 @@ function openBM(bill){
   document.getElementById('msub').textContent=bLD(bill)?`Last action: ${bLD(bill)}`:'';
 
   const allSp=(bill.sponsors||[]).map(s=>`<span class="chip" onclick="closeM();openPM(${s.people_id})" style="cursor:pointer;">${s.name} (${s.party||'?'})</span>`).join('');
-  const votes=bill.votes||[];
+
+  // ── ROLL CALL GRID ──
+  const billVoteIds=(bill.votes||[]).map(v=>v.roll_call_id).filter(Boolean);
+  const rollCalls=(DATA.roll_calls||[]).filter(rc=>billVoteIds.includes(rc.roll_call_id));
   let vh='';
-  if(votes.length){
-    vh=`<h3>Vote Record</h3>`;
-    votes.forEach(v=>{
-      const tot=(v.yea||0)+(v.nay||0),yp=tot?Math.round(v.yea/tot*100):0;
-      vh+=`<div class="vbar-wrap"><div class="vbar-lbl"><span>${v.desc||v.chamber||'Vote'} — ${v.date||''}</span><span>${v.yea||0} Yea / ${v.nay||0} Nay</span></div><div class="vbar"><div class="vbar-y" style="width:${yp}%"></div></div></div>`;
+  if(rollCalls.length){
+    rollCalls.forEach(rc=>{
+      const yea=(rc.votes||[]).filter(v=>v.vote_id===1);
+      const nay=(rc.votes||[]).filter(v=>v.vote_id===2);
+      const abs=(rc.votes||[]).filter(v=>v.vote_id===4||v.vote_id===5);
+      const tot=yea.length+nay.length;
+      const yeaPct=tot?Math.round(yea.length/tot*100):0;
+      vh+=`<h3>${rc.desc||rc.chamber||'Vote'} — ${rc.date||''} &nbsp;
+        <span style="color:var(--green)">${yea.length} Yea</span> /
+        <span style="color:var(--red)">${nay.length} Nay</span>
+        ${abs.length?`/ <span style="color:var(--muted)">${abs.length} Absent</span>`:''}
+      </h3>
+      <div class="vbar-wrap" style="margin-bottom:14px;">
+        <div class="vbar" style="height:8px;">
+          <div class="vbar-y" style="width:${yeaPct}%"></div>
+        </div>
+      </div>`;
+
+      // YEA votes grid
+      if(yea.length){
+        vh+=`<div style="font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin-bottom:8px;">✓ Voted Yea</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">`;
+        yea.forEach(v=>{
+          const p=pidx[v.people_id];
+          const ph=p?img(p):'';
+          const name=v.name||(p?p.name:'Unknown');
+          const party=v.party||(p?p.party:'?');
+          const pCol=party==='R'?'var(--red)':'var(--blue)';
+          vh+=`<div onclick="closeM();openPM(${v.people_id})" style="display:flex;align-items:center;gap:5px;padding:4px 8px 4px 4px;border:1px solid #d1e8d8;background:#f0faf3;cursor:pointer;transition:all .12s;border-radius:2px;" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='#d1e8d8'">
+            ${ph?`<img src="${ph}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'">`:`<div style="width:20px;height:20px;border-radius:50%;background:var(--paper3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:0.6rem;color:var(--muted);">${init2(name)}</div>`}
+            <span style="font-size:0.72rem;white-space:nowrap;">${name}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:0.55rem;color:${pCol}">${party}</span>
+          </div>`;
+        });
+        vh+=`</div>`;
+      }
+
+      // NAY votes grid
+      if(nay.length){
+        vh+=`<div style="font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--red);margin-bottom:8px;">✗ Voted Nay</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;">`;
+        nay.forEach(v=>{
+          const p=pidx[v.people_id];
+          const ph=p?img(p):'';
+          const name=v.name||(p?p.name:'Unknown');
+          const party=v.party||(p?p.party:'?');
+          const pCol=party==='R'?'var(--red)':'var(--blue)';
+          vh+=`<div onclick="closeM();openPM(${v.people_id})" style="display:flex;align-items:center;gap:5px;padding:4px 8px 4px 4px;border:1px solid #f5d5d2;background:#fdf5f5;cursor:pointer;transition:all .12s;border-radius:2px;" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='#f5d5d2'">
+            ${ph?`<img src="${ph}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.style.display='none'">`:`<div style="width:20px;height:20px;border-radius:50%;background:var(--paper3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:0.6rem;color:var(--muted);">${init2(name)}</div>`}
+            <span style="font-size:0.72rem;white-space:nowrap;">${name}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:0.55rem;color:${pCol}">${party}</span>
+          </div>`;
+        });
+        vh+=`</div>`;
+      }
+
+      // Absent
+      if(abs.length){
+        vh+=`<div style="font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">— Absent / Not Voting</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">`;
+        abs.forEach(v=>{
+          const p=pidx[v.people_id];
+          const name=v.name||(p?p.name:'Unknown');
+          vh+=`<div onclick="closeM();openPM(${v.people_id})" style="display:flex;align-items:center;gap:5px;padding:4px 8px 4px 4px;border:1px solid var(--border);background:var(--paper2);cursor:pointer;border-radius:2px;opacity:0.7;">
+            <span style="font-size:0.72rem;white-space:nowrap;color:var(--muted)">${name}</span>
+          </div>`;
+        });
+        vh+=`</div>`;
+      }
     });
   }
+
   const hist=(bill.history||[]).slice(-6).reverse();
   let hh='';
   if(hist.length){
@@ -865,7 +919,8 @@ function openBM(bill){
     </div>
     ${bD(bill)?`<h3>Description</h3><p style="font-size:0.83rem;line-height:1.65;margin-bottom:4px">${bD(bill)}</p>`:''}
     <h3>Sponsors</h3><div class="chip-row">${allSp||'—'}</div>
-    ${vh}${hh}
+    ${vh||''}
+    ${hh}
     ${bURL(bill)?`<h3>Source</h3><p><a href="${bURL(bill)}" target="_blank" style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--red)">${bURL(bill)}</a></p>`:''}`;
   document.getElementById('mwrap').classList.add('open');
 }
