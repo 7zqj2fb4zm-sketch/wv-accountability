@@ -429,31 +429,63 @@ let DATA,bills=[],delegates=[],senators=[],smap={},pidx={},pstats={};
 let bpage=1,fbills=[];
 const PG=50;
 
-// WV county → district mapping (simplified best-effort)
-// Each county maps to likely delegate districts for lookup
-const COUNTY_DISTRICTS={
-  'Barbour':['HD-058'],'Berkeley':['HD-065','HD-066','HD-067','HD-068','HD-069'],
-  'Boone':['HD-025','HD-026'],'Braxton':['HD-043'],'Brooke':['HD-003'],
-  'Cabell':['HD-016','HD-017','HD-018','HD-019','HD-020'],
-  'Calhoun':['HD-037'],'Clay':['HD-043'],'Doddridge':['HD-037'],
-  'Fayette':['HD-033','HD-034'],'Gilmer':['HD-037'],'Grant':['HD-059'],
-  'Greenbrier':['HD-035','HD-036'],'Hampshire':['HD-059'],'Hancock':['HD-001','HD-002'],
-  'Hardy':['HD-059'],'Harrison':['HD-050','HD-051','HD-052','HD-053'],
-  'Jackson':['HD-010'],'Jefferson':['HD-065','HD-066'],
-  'Kanawha':['HD-027','HD-028','HD-029','HD-030','HD-031','HD-032'],
-  'Lewis':['HD-042'],'Lincoln':['HD-021'],'Logan':['HD-022','HD-023'],
-  'Marion':['HD-047','HD-048','HD-049'],'Marshall':['HD-004','HD-005'],
-  'Mason':['HD-011'],'McDowell':['HD-014'],'Mercer':['HD-027','HD-028'],
-  'Mineral':['HD-060'],'Mingo':['HD-013'],'Monongalia':['HD-077','HD-078','HD-079','HD-080'],
-  'Monroe':['HD-036'],'Morgan':['HD-059'],'Nicholas':['HD-043'],
-  'Ohio':['HD-006','HD-007','HD-008'],'Pendleton':['HD-058'],
-  'Pleasants':['HD-009'],'Pocahontas':['HD-043'],'Preston':['HD-056','HD-057'],
-  'Putnam':['HD-012','HD-013'],'Raleigh':['HD-036','HD-037','HD-038','HD-039'],
-  'Randolph':['HD-057','HD-058'],'Ritchie':['HD-009'],'Roane':['HD-037'],
-  'Summers':['HD-035'],'Taylor':['HD-055'],'Tucker':['HD-057'],
-  'Tyler':['HD-009'],'Upshur':['HD-055'],'Wayne':['HD-015','HD-016'],
-  'Webster':['HD-043'],'Wetzel':['HD-004'],'Wirt':['HD-009'],
-  'Wood':['HD-009','HD-010','HD-011'],'Wyoming':['HD-026']
+// WV county → district mapping (verified against 2022 redistricting)
+const COUNTY_MAP={
+  'Barbour':   {hd:['HD-054','HD-056'],sd:['SD-014']},
+  'Berkeley':  {hd:['HD-065','HD-066','HD-067','HD-068','HD-069','HD-070'],sd:['SD-016','SD-017']},
+  'Boone':     {hd:['HD-023','HD-024'],sd:['SD-006']},
+  'Braxton':   {hd:['HD-043','HD-044'],sd:['SD-011']},
+  'Brooke':    {hd:['HD-002','HD-003'],sd:['SD-001']},
+  'Cabell':    {hd:['HD-016','HD-017','HD-018','HD-019','HD-020'],sd:['SD-005']},
+  'Calhoun':   {hd:['HD-042'],sd:['SD-015']},
+  'Clay':      {hd:['HD-043'],sd:['SD-011']},
+  'Doddridge': {hd:['HD-009'],sd:['SD-015']},
+  'Fayette':   {hd:['HD-033','HD-034','HD-035'],sd:['SD-009']},
+  'Gilmer':    {hd:['HD-042'],sd:['SD-015']},
+  'Grant':     {hd:['HD-058','HD-059'],sd:['SD-017']},
+  'Greenbrier':{hd:['HD-036','HD-037'],sd:['SD-010']},
+  'Hampshire': {hd:['HD-059','HD-060'],sd:['SD-017']},
+  'Hancock':   {hd:['HD-001','HD-002'],sd:['SD-001']},
+  'Hardy':     {hd:['HD-059'],sd:['SD-017']},
+  'Harrison':  {hd:['HD-050','HD-051','HD-052','HD-053'],sd:['SD-015']},
+  'Jackson':   {hd:['HD-010','HD-011'],sd:['SD-004']},
+  'Jefferson': {hd:['HD-065','HD-066'],sd:['SD-016']},
+  'Kanawha':   {hd:['HD-027','HD-028','HD-029','HD-030','HD-031','HD-032','HD-061','HD-062'],sd:['SD-011','SD-012','SD-013']},
+  'Lewis':     {hd:['HD-042','HD-043'],sd:['SD-014']},
+  'Lincoln':   {hd:['HD-021','HD-022'],sd:['SD-006']},
+  'Logan':     {hd:['HD-022','HD-023'],sd:['SD-006']},
+  'Marion':    {hd:['HD-047','HD-048','HD-049'],sd:['SD-016']},
+  'Marshall':  {hd:['HD-004','HD-005'],sd:['SD-002']},
+  'Mason':     {hd:['HD-011','HD-012'],sd:['SD-004']},
+  'McDowell':  {hd:['HD-014','HD-015'],sd:['SD-007']},
+  'Mercer':    {hd:['HD-038','HD-039','HD-040'],sd:['SD-008']},
+  'Mineral':   {hd:['HD-060'],sd:['SD-017']},
+  'Mingo':     {hd:['HD-013','HD-014'],sd:['SD-006']},
+  'Monongalia':{hd:['HD-077','HD-078','HD-079','HD-080'],sd:['SD-013']},
+  'Monroe':    {hd:['HD-036','HD-037'],sd:['SD-008']},
+  'Morgan':    {hd:['HD-059'],sd:['SD-016']},
+  'Nicholas':  {hd:['HD-043','HD-044'],sd:['SD-011']},
+  'Ohio':      {hd:['HD-006','HD-007','HD-008'],sd:['SD-001']},
+  'Pendleton': {hd:['HD-058'],sd:['SD-017']},
+  'Pleasants': {hd:['HD-009'],sd:['SD-003']},
+  'Pocahontas':{hd:['HD-044'],sd:['SD-010']},
+  'Preston':   {hd:['HD-056','HD-057'],sd:['SD-013']},
+  'Putnam':    {hd:['HD-012','HD-013'],sd:['SD-004']},
+  'Raleigh':   {hd:['HD-033','HD-034','HD-035','HD-036'],sd:['SD-009']},
+  'Randolph':  {hd:['HD-054','HD-055'],sd:['SD-014']},
+  'Ritchie':   {hd:['HD-009'],sd:['SD-003']},
+  'Roane':     {hd:['HD-042'],sd:['SD-015']},
+  'Summers':   {hd:['HD-035'],sd:['SD-008']},
+  'Taylor':    {hd:['HD-054','HD-055'],sd:['SD-014']},
+  'Tucker':    {hd:['HD-057'],sd:['SD-014']},
+  'Tyler':     {hd:['HD-009'],sd:['SD-002']},
+  'Upshur':    {hd:['HD-054','HD-055'],sd:['SD-014']},
+  'Wayne':     {hd:['HD-015','HD-016'],sd:['SD-005']},
+  'Webster':   {hd:['HD-043'],sd:['SD-010']},
+  'Wetzel':    {hd:['HD-004','HD-005'],sd:['SD-002']},
+  'Wirt':      {hd:['HD-009','HD-010'],sd:['SD-015']},
+  'Wood':      {hd:['HD-009','HD-010','HD-011'],sd:['SD-003']},
+  'Wyoming':   {hd:['HD-024','HD-025'],sd:['SD-007']},
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -528,29 +560,33 @@ function init(){
 // ─────────────────────────────────────────────────────────────
 function buildStats(){
   pstats={};
-  // attendance + party-line from roll calls
   (DATA.roll_calls||[]).forEach(rc=>{
     const votes=rc.votes||[];
-    // determine majority vote per party
+
+    // determine majority vote per party using pidx for party lookup
     const partyVotes={R:{yea:0,nay:0},D:{yea:0,nay:0}};
     votes.forEach(v=>{
-      if(v.vote_id===1&&partyVotes[v.party])partyVotes[v.party].yea++;
-      if(v.vote_id===2&&partyVotes[v.party])partyVotes[v.party].nay++;
+      const p=pidx[v.people_id];
+      const party=p?p.party:'';
+      if(v.vote_id===1&&partyVotes[party])partyVotes[party].yea++;
+      if(v.vote_id===2&&partyVotes[party])partyVotes[party].nay++;
     });
     const partyMaj={};
-    ['R','D'].forEach(p=>{
-      const pv=partyVotes[p];
-      partyMaj[p]=pv.yea+pv.nay>=3?(pv.yea>=pv.nay?1:2):null;
+    ['R','D'].forEach(pty=>{
+      const pv=partyVotes[pty];
+      const tot=pv.yea+pv.nay;
+      partyMaj[pty]=tot>=3?(pv.yea>=pv.nay?1:2):null;
     });
 
     votes.forEach(v=>{
       const pid=v.people_id;
-      if(!pstats[pid])pstats[pid]={att:0,total:0,withParty:0,partyVotes:0,party:v.party};
+      const p=pidx[pid];
+      const party=p?p.party:'';
+      if(!pstats[pid])pstats[pid]={att:0,total:0,withParty:0,partyVotes:0,party};
       pstats[pid].total++;
       if(v.vote_id===1||v.vote_id===2){
         pstats[pid].att++;
-        // party-line check
-        const maj=partyMaj[v.party];
+        const maj=partyMaj[party];
         if(maj!==null){
           pstats[pid].partyVotes++;
           if(v.vote_id===maj)pstats[pid].withParty++;
@@ -688,30 +724,27 @@ function findRep(){
   const container=document.getElementById('rep-results');
   if(!county){container.innerHTML='';return;}
 
-  const districts=COUNTY_DISTRICTS[county]||[];
-  // find delegates whose district matches
+  const map=COUNTY_MAP[county];
+  if(!map){container.innerHTML=`<div class="no-rep"><p>No district data found for <strong>${county} County</strong>.</p></div>`;return;}
+
+  const allDistricts=[...map.hd,...map.sd];
   const allP=Object.values(pidx);
-  let matches=allP.filter(p=>{
+
+  const matches=allP.filter(p=>{
     const d=(p.district||'').toUpperCase();
-    return districts.some(dist=>d===dist.toUpperCase()||d.includes(dist.replace('HD-','').replace('SD-','')));
+    return allDistricts.includes(d);
   });
 
-  // fallback: search by county name in district field
   if(matches.length===0){
-    matches=allP.filter(p=>(p.district||'').toLowerCase().includes(county.toLowerCase()));
-  }
-
-  if(matches.length===0){
-    container.innerHTML=`<div class="no-rep"><p>No exact district match found for <strong>${county} County</strong>.</p><p style="margin-top:8px;font-size:0.78rem;">Try browsing the <a href="#" onclick="showTabByName('delegates')" style="color:var(--red)">House Delegates</a> tab and searching by district number.</p></div>`;
+    container.innerHTML=`<div class="no-rep"><p>No legislators found for <strong>${county} County</strong>.</p><p style="margin-top:8px;font-size:0.78rem;">Try browsing the <a href="#" onclick="event.preventDefault();showTabByName('delegates')" style="color:var(--red)">House Delegates</a> tab.</p></div>`;
     return;
   }
 
-  // sort: senators first, then delegates, both alphabetical
+  // senators first, then delegates, both alphabetical
   matches.sort((a,b)=>{
-    const aS=(a.role||'').includes('Sen');
-    const bS=(b.role||'').includes('Sen');
-    if(aS&&!bS)return -1;
-    if(!aS&&bS)return 1;
+    const aS=(a.district||'').startsWith('SD');
+    const bS=(b.district||'').startsWith('SD');
+    if(aS&&!bS)return -1;if(!aS&&bS)return 1;
     return a.name.localeCompare(b.name);
   });
 
