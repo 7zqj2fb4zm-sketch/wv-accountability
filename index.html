@@ -41,7 +41,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.3;pointer-events:none;z
 .err{background:#fdf2f1;border:1px solid var(--red);padding:14px;margin-top:18px;font-size:0.81rem;color:var(--red);display:none;line-height:1.5;}
 
 /* ── APP ── */
-#app{display:none;padding-top:130px;}
+#app{display:none;}
 .wrap{max-width:1400px;margin:0 auto;padding:0 22px;}
 .tab{display:none;padding:28px 0 64px;}
 .tab.on{display:block;}
@@ -531,6 +531,17 @@ const COUNTY_MAP={
 document.getElementById('hdr-date').textContent =
   new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
 
+// ── DYNAMIC HEADER OFFSET ──
+function fixOffset(){
+  const h=document.querySelector('.hdr').getBoundingClientRect().height;
+  document.getElementById('app').style.paddingTop=h+'px';
+  document.getElementById('loader').style.paddingTop=(h+40)+'px';
+}
+window.addEventListener('resize',fixOffset);
+// run immediately and again after fonts load
+fixOffset();
+document.fonts&&document.fonts.ready.then(fixOffset);
+
 async function autoLoad(){
   try{
     const res=await fetch('wv_data_votes.json');
@@ -583,6 +594,7 @@ function init(){
 
   document.getElementById('loader').style.display='none';
   document.getElementById('app').style.display='block';
+  fixOffset();
 
   updateTopBar();
   updateTicker();
