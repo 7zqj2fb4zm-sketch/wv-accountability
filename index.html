@@ -243,8 +243,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.3;pointer-events:none;z
     <div class="hdr-date" id="hdr-date"></div>
   </div>
   <div class="hdr-nav">
-    <button class="nav-btn on"  onclick="showTab('find',this)">Find My Rep</button>
-    <button class="nav-btn" onclick="showTab('overview',this)">Session Overview</button>
+    <button class="nav-btn on"  onclick="showTab('overview',this)">Session Overview</button>
     <button class="nav-btn" onclick="showTab('bills',this)">All Bills</button>
     <button class="nav-btn" onclick="showTab('delegates',this)">House Delegates</button>
     <button class="nav-btn" onclick="showTab('senate',this)">Senate</button>
@@ -274,40 +273,8 @@ body::before{content:'';position:fixed;inset:0;opacity:0.3;pointer-events:none;z
 
   <div class="wrap">
 
-    <!-- FIND MY REP -->
-    <div class="tab on" id="tab-find">
-      <div class="hero">
-        <h2>Who Represents You?</h2>
-        <p>Select your county below to see your House Delegate and State Senator — their record, their votes, and how to reach them.</p>
-        <select class="county-select" id="county-select" onchange="findRep()">
-          <option value="">— Select your county —</option>
-          <option>Barbour</option><option>Berkeley</option><option>Boone</option>
-          <option>Braxton</option><option>Brooke</option><option>Cabell</option>
-          <option>Calhoun</option><option>Clay</option><option>Doddridge</option>
-          <option>Fayette</option><option>Gilmer</option><option>Grant</option>
-          <option>Greenbrier</option><option>Hampshire</option><option>Hancock</option>
-          <option>Hardy</option><option>Harrison</option><option>Jackson</option>
-          <option>Jefferson</option><option>Kanawha</option><option>Lewis</option>
-          <option>Lincoln</option><option>Logan</option><option>Marion</option>
-          <option>Marshall</option><option>Mason</option><option>McDowell</option>
-          <option>Mercer</option><option>Mineral</option><option>Mingo</option>
-          <option>Monongalia</option><option>Monroe</option><option>Morgan</option>
-          <option>Nicholas</option><option>Ohio</option><option>Pendleton</option>
-          <option>Pleasants</option><option>Pocahontas</option><option>Preston</option>
-          <option>Putnam</option><option>Raleigh</option><option>Randolph</option>
-          <option>Ritchie</option><option>Roane</option><option>Summers</option>
-          <option>Taylor</option><option>Tucker</option><option>Tyler</option>
-          <option>Upshur</option><option>Wayne</option><option>Webster</option>
-          <option>Wetzel</option><option>Wirt</option><option>Wood</option>
-          <option>Wyoming</option>
-        </select>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:rgba(255,255,255,0.3);margin-top:6px;">Most counties have multiple delegates — all will be shown</div>
-      </div>
-      <div id="rep-results" class="rep-results"></div>
-    </div>
-
     <!-- SESSION OVERVIEW -->
-    <div class="tab" id="tab-overview">
+    <div class="tab on" id="tab-overview">
       <div class="ov-grid">
         <div>
           <div class="sec">Legislative Composition — All Chambers</div>
