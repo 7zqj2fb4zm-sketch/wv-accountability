@@ -71,6 +71,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.3;pointer-events:none;z
 .tl-dot{width:10px;height:10px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:17px;position:relative;z-index:1;}
 .tl-content{padding:10px 0 18px;flex:1;}
 .tl-title{font-family:'Libre Baskerville',serif;font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:4px;}
+.tl-date-inline{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;color:var(--red);margin-bottom:5px;}
 .tl-desc{font-size:0.82rem;color:rgba(255,255,255,0.55);line-height:1.55;}
 .tl-highlight{background:rgba(181,41,28,0.25);border-left:3px solid var(--red);padding:10px 14px;margin-top:8px;}
 .tl-highlight p{font-size:0.82rem;color:rgba(255,255,255,0.75);line-height:1.55;}
@@ -99,6 +100,27 @@ body::before{content:'';position:fixed;inset:0;opacity:0.3;pointer-events:none;z
 .spotlight-action a{color:var(--red);text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;}
 .spotlight-action a:hover{text-decoration:underline;}
 .spotlight-note{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:rgba(255,255,255,0.3);margin-top:16px;line-height:1.6;}
+.county-callout{background:rgba(181,41,28,0.2);border:2px solid var(--red);padding:22px 26px;margin-bottom:24px;}
+.county-callout-hed{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.06em;color:#fff;margin-bottom:6px;}
+.county-callout-sub{font-size:0.84rem;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:16px;}
+.county-rep-grid{display:flex;gap:12px;flex-wrap:wrap;}
+.county-rep-card{border:1px solid rgba(255,255,255,0.15);padding:14px;background:rgba(0,0,0,0.2);flex:1;min-width:200px;}
+.county-rep-card.voted-yes{border-color:var(--red);background:rgba(181,41,28,0.15);}
+.county-rep-card.voted-no{border-color:var(--green);background:rgba(30,102,64,0.15);}
+.crep-top{display:flex;gap:10px;align-items:center;margin-bottom:10px;}
+.crep-photo{width:44px;height:44px;border-radius:4px;object-fit:cover;flex-shrink:0;border:2px solid rgba(255,255,255,0.15);}
+.crep-init{width:44px;height:44px;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:#fff;background:rgba(255,255,255,0.1);}
+.crep-name{font-family:'Libre Baskerville',serif;font-size:0.9rem;font-weight:700;color:#fff;line-height:1.2;margin-bottom:2px;}
+.crep-meta{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;color:rgba(255,255,255,0.45);}
+.crep-verdict{font-size:0.78rem;line-height:1.5;margin-bottom:10px;}
+.crep-verdict.yes{color:rgba(255,150,150,0.9);}
+.crep-verdict.no{color:rgba(150,220,150,0.9);}
+.crep-action{display:flex;gap:6px;flex-wrap:wrap;}
+.crep-btn{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;letter-spacing:0.06em;padding:5px 10px;text-decoration:none;transition:all .12s;display:inline-block;}
+.crep-btn.phone{border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);}
+.crep-btn.phone:hover{background:rgba(255,255,255,0.1);}
+.crep-btn.record{border:1px solid var(--red);color:var(--red);cursor:pointer;background:none;}
+.crep-btn.record:hover{background:var(--red);color:#fff;}
 @media(max-width:600px){.spotlight-body{padding:20px 18px;}.tl-date{display:none;}.tl-item::before{left:5px;}}
 .hero{background:var(--ink);color:#fff;padding:40px 22px;margin-bottom:0;text-align:center;}
 .hero h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,4vw,3rem);letter-spacing:0.06em;margin-bottom:8px;}
@@ -850,6 +872,7 @@ function renderSpotlight(){
             <div class="tl-date">Jan 13</div>
             <div class="tl-dot"></div>
             <div class="tl-content">
+              <div class="tl-date-inline">January 13, 2026</div>
               <div class="tl-title">Wayne County — East Lynn Substation Spill</div>
               <div class="tl-desc">Vandalism at Appalachian Power's East Lynn substation releases approximately <strong style="color:#fff">4,900 gallons</strong> of transformer oil. The town of Wayne's water supply is impacted.</div>
             </div>
@@ -858,6 +881,7 @@ function renderSpotlight(){
             <div class="tl-date">Jan 16</div>
             <div class="tl-dot"></div>
             <div class="tl-content">
+              <div class="tl-date-inline">January 16, 2026</div>
               <div class="tl-title">"Do Not Consume" Order Issued — Wayne County</div>
               <div class="tl-desc">Residents are told not to drink their tap water. Water shortages follow. Source: West Virginia Public Broadcasting.</div>
             </div>
@@ -866,6 +890,7 @@ function renderSpotlight(){
             <div class="tl-date">Jan 30</div>
             <div class="tl-dot"></div>
             <div class="tl-content">
+              <div class="tl-date-inline">January 30, 2026</div>
               <div class="tl-title">Wyoming County — Clear Fork Station Spill</div>
               <div class="tl-desc">Equipment failure at Appalachian Power's Wyoming Station in Clear Fork ruptures a transformer, releasing an estimated <strong style="color:#fff">10,000–14,000 gallons</strong> of mineral oil into surrounding creeks and the Clear Fork water system. Source: Charleston Gazette-Mail.</div>
             </div>
@@ -874,7 +899,8 @@ function renderSpotlight(){
             <div class="tl-date">Feb 17</div>
             <div class="tl-dot" style="background:var(--red);box-shadow:0 0 0 3px rgba(181,41,28,0.3)"></div>
             <div class="tl-content">
-              <div class="tl-title">SB967 Introduced — 18 Days After Second Spill</div>
+              <div class="tl-date-inline">February 17, 2026 — 18 days after the second spill</div>
+              <div class="tl-title">SB967 Introduced — Remove Transformers From Water Protections</div>
               <div class="tl-desc">Sen. Tom Willis (R) introduces SB967, a bill to <strong style="color:#fff">remove transformers from the Above Ground Storage Tank Act</strong> — the 2014 law passed after the Elk River chemical spill that was specifically designed to regulate exactly the kind of storage and spill that just contaminated two WV water systems.</div>
               <div class="tl-highlight">
                 <p>Appalachian Power maintains a registered lobbyist (Sammy Gray) active in the 2025-2026 cycle at the WV Ethics Commission. APCo caused both spills. APCo would benefit directly if transformers were removed from storage tank regulations — less mandatory reporting, less oversight, less liability.</p>
@@ -886,6 +912,7 @@ function renderSpotlight(){
             <div class="tl-date">Mar 4</div>
             <div class="tl-dot" style="background:var(--red);box-shadow:0 0 0 3px rgba(181,41,28,0.3)"></div>
             <div class="tl-content">
+              <div class="tl-date-inline">March 4, 2026</div>
               <div class="tl-title">SB641 Passes the Senate — 24 to 9</div>
               <div class="tl-desc">The Senate passes SB641, a broader rollback of the 2014 Above Ground Storage Tank Act. The bill reduces inspection requirements, allows self-inspections instead of independent ones, and relaxes standards for tanks near drinking water sources. Sen. Tom Willis — the same senator who introduced SB967 — votes yes.</div>
             </div>
@@ -894,6 +921,7 @@ function renderSpotlight(){
             <div class="tl-date">Mar 12</div>
             <div class="tl-dot" style="background:var(--red);box-shadow:0 0 0 3px rgba(181,41,28,0.3)"></div>
             <div class="tl-content">
+              <div class="tl-date-inline">March 12, 2026</div>
               <div class="tl-title">SB641 Passes the House — 58 to 34</div>
               <div class="tl-desc">The House passes SB641. 58 legislators vote to weaken water protections. 34 vote no — including 25 Republicans who broke with their party to oppose the bill.</div>
             </div>
@@ -902,6 +930,7 @@ function renderSpotlight(){
             <div class="tl-date">Mar 13</div>
             <div class="tl-dot" style="background:var(--red);box-shadow:0 0 0 3px rgba(181,41,28,0.3)"></div>
             <div class="tl-content">
+              <div class="tl-date-inline">March 13, 2026</div>
               <div class="tl-title">SB641 Signed Into Law</div>
               <div class="tl-desc">The Senate concurs with House amendments 25-8. SB641 becomes law. Since the 2014 Above Ground Storage Tank Act was passed, the number of regulated tanks has been reduced to roughly <strong style="color:#fff">11% of those originally registered</strong>. This session added another layer of rollback.</div>
             </div>
@@ -912,6 +941,13 @@ function renderSpotlight(){
 
         <div class="spotlight-callout">
           "Since the 2014 Freedom Industries spill, rollbacks have reduced the number of regulated tanks to roughly 11% of those initially registered. SB641 continued that trend — while two counties were still recovering from oil spills in their water supply."
+        </div>
+
+        <hr class="spotlight-divider">
+
+        <div id="county-callout-inner" style="margin-bottom:24px;padding:16px 20px;background:rgba(30,102,64,0.15);border:1px solid rgba(30,102,64,0.4);">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:6px;">Worth Noting</div>
+          <p style="font-size:0.84rem;color:rgba(255,255,255,0.75);line-height:1.65;">The delegates representing Wayne and Wyoming counties — Ryan Browning (HD-028), Michael Amos (HD-027), and Adam Vance (HD-035) — all voted <strong style="color:#a8d8b0">NO</strong> on SB641. The constituents whose water was contaminated had representatives who stood with them. The 58 who voted yes represent other districts.</p>
         </div>
 
         <hr class="spotlight-divider">
