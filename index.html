@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>West Virginia Legislative Accountability Project — 2026 Session</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -18,7 +18,9 @@ body::before{content:'';position:fixed;inset:0;opacity:0.3;pointer-events:none;z
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");}
 
 /* ── HEADER ── */
-.hdr{background:var(--ink);position:fixed;top:0;left:0;right:0;z-index:300;box-shadow:0 2px 10px rgba(0,0,0,0.4);}
+.hdr{background:var(--ink);position:fixed;top:0;left:0;right:0;z-index:300;box-shadow:0 2px 10px rgba(0,0,0,0.4);
+  padding-top:env(safe-area-inset-top);
+  padding-top:constant(safe-area-inset-top);}
 .hdr-flag{display:flex;align-items:center;padding:0 24px;border-bottom:1px solid rgba(255,255,255,0.08);}
 .hdr-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,3.5vw,2.4rem);letter-spacing:0.07em;color:#fff;padding:12px 0 10px;flex:1;text-align:center;}
 .hdr-date{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;color:rgba(255,255,255,0.35);text-transform:uppercase;min-width:130px;text-align:right;}
@@ -915,7 +917,7 @@ function renderSpotlight(){
               <div class="tl-title">SB967 Introduced — Remove Transformers From Water Protections</div>
               <div class="tl-desc">Sen. Tom Willis (R) introduces SB967, a bill to <strong style="color:#fff">remove transformers from the Above Ground Storage Tank Act</strong> — the 2014 law passed after the Elk River chemical spill that was specifically designed to regulate exactly the kind of storage and spill that just contaminated two WV water systems.</div>
               <div class="tl-highlight">
-                <p>Appalachian Power maintains a registered lobbyist (Sammy Gray) active in the 2025-2026 cycle at the WV Ethics Commission. APCo caused both spills. APCo would benefit directly if transformers were removed from storage tank regulations — less mandatory reporting, less oversight, less liability.</p>
+                <p>Appalachian Power maintains a registered lobbyist (Sammy Gray) active in the 2025-2026 cycle at the WV Ethics Commission. APCo was the operator responsible for both facilities where the spills occurred. APCo would benefit directly if transformers were removed from storage tank regulations — less mandatory reporting, less oversight, less liability.</p>
                 <p style="margin-top:8px;">SB967 died in the Senate Energy, Industry and Mining Committee without a vote. But something else was already moving.</p>
               </div>
             </div>
